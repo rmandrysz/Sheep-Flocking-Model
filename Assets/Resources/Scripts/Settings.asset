@@ -20,9 +20,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   flockmateAvoidanceWeight: 2
-  flockCenteringWeight: 0.5
+  flockCenteringWeight: 0.7
   velocityMatchingWeight: 0.5
-  obstacleAvoidanceWeight: 7
+  obstacleAvoidanceWeight: 5
   maxInfluence: 10
   flockmateAvoidanceRadius: 6
   flockmateDetectionRadius: 8

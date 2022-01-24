@@ -40,8 +40,8 @@ public class Agent : MonoBehaviour
         Move(dt);
                     
         AvoidWalls();
-        MatchVelocity();
         AvoidFlockmateCollisions();
+        MatchVelocity();
         MoveToFlockCenter();
 
         UpdateDirection();
