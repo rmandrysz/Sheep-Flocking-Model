@@ -40,9 +40,9 @@ public class Agent : MonoBehaviour
         Move(dt);
                     
         AvoidWalls();
-        AvoidFlockmateCollisions();
         MatchVelocity();
         MoveToFlockCenter();
+        AvoidFlockmateCollisions();
 
         UpdateDirection();
         ResetAccumulators();
@@ -58,6 +58,10 @@ public class Agent : MonoBehaviour
     private void AvoidFlockmateCollisions()
     {
         RequestDirection(settings.flockmateAvoidanceWeight * flockmateCollisionAvoidance, "Avoid Flockmates");
+        if(debug)
+        {
+            Debug.DrawRay(transform.position, flockmateCollisionAvoidance * settings.flockmateAvoidanceWeight, Color.magenta);
+        }
     }
 
     private void MatchVelocity()
@@ -68,6 +72,11 @@ public class Agent : MonoBehaviour
         }
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(settings.velocityMatchingWeight * averageFlockmateVelocity, "Match Velocity");
+
+        if(debug)
+        {
+            Debug.DrawRay(transform.position, averageFlockmateVelocity * settings.velocityMatchingWeight, Color.blue);
+        }
     }
 
     private void MoveToFlockCenter()
@@ -80,7 +89,7 @@ public class Agent : MonoBehaviour
         RequestDirection(settings.flockCenteringWeight * (averageFlockCenter - transform.position), "Move to Center");
         if(debug)
         {
-            Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
+            Debug.DrawRay(transform.position, (averageFlockCenter * settings.flockCenteringWeight) - transform.position, Color.yellow);
         }
     }
 
@@ -170,7 +179,11 @@ public class Agent : MonoBehaviour
             }
         }
 
-        Vector3.ClampMagnitude(direction, settings.maxSpeed);
+        direction = Vector3.ClampMagnitude(direction, settings.maxSpeed);
+        if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
+        {
+            direction = direction.normalized * settings.minSpeed;
+        }
     }
 
     private void ResetAccumulators()

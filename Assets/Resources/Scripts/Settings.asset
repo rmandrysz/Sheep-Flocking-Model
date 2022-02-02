@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5509add2f0a1d94e94c959ae013c851, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  minSpeed: 4
+  minSpeed: 6
   maxSpeed: 8
   collisionAvoidDistance: 10
-  circleCastRadius: 0.5
+  circleCastRadius: 0.4
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8
   flockmateAvoidanceWeight: 2
-  flockCenteringWeight: 0.7
-  velocityMatchingWeight: 0.5
-  obstacleAvoidanceWeight: 5
+  flockCenteringWeight: 0.9
+  velocityMatchingWeight: 0.4
+  obstacleAvoidanceWeight: 6
   maxInfluence: 10
   flockmateAvoidanceRadius: 6
   flockmateDetectionRadius: 8
-  sightAngle: 90
+  sightAngle: 110
