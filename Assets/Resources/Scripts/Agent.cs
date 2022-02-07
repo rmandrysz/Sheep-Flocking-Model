@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {   
-    private Vector3 direction;
+    public Vector3 direction;
 
     [HideInInspector]
     public Vector3 flockmateCollisionAvoidance = Vector3.zero;
@@ -40,9 +40,9 @@ public class Agent : MonoBehaviour
         Move(dt);
                     
         AvoidWalls();
-        MatchVelocity();
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
+        MatchVelocity();
 
         UpdateDirection();
         ResetAccumulators();
@@ -75,7 +75,7 @@ public class Agent : MonoBehaviour
 
         if(debug)
         {
-            Debug.DrawRay(transform.position, averageFlockmateVelocity * settings.velocityMatchingWeight, Color.blue);
+            Debug.DrawRay(transform.position, averageFlockmateVelocity, Color.blue);
         }
     }
 
@@ -89,7 +89,8 @@ public class Agent : MonoBehaviour
         RequestDirection(settings.flockCenteringWeight * (averageFlockCenter - transform.position), "Move to Center");
         if(debug)
         {
-            Debug.DrawRay(transform.position, (averageFlockCenter * settings.flockCenteringWeight) - transform.position, Color.yellow);
+            Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
+            Debug.Log("Average Flock Center: " + averageFlockCenter);
         }
     }
 
@@ -103,13 +104,37 @@ public class Agent : MonoBehaviour
         }
         if (debug)
         {
-            Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
+            // Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
         }
     }
 
     private bool IsDetectingColision()
     {
-        return Physics2D.CircleCast(transform.position, settings.circleCastRadius, direction, settings.collisionAvoidDistance, settings.obstacleLayer);
+        float angle = settings.coneOfSightAngle / 2f;
+        Vector3 angleLeft = Quaternion.AngleAxis(-angle, Vector3.forward) * direction.normalized;
+        Vector3 angleRight = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+
+        RaycastHit2D front = Physics2D.CircleCast(transform.position, settings.circleCastRadius, direction, settings.collisionAvoidDistance, settings.obstacleLayer);
+        RaycastHit2D left = Physics2D.CircleCast(transform.position, settings.circleCastRadius, angleLeft, settings.collisionAvoidDistance, settings.obstacleLayer);
+        RaycastHit2D right = Physics2D.CircleCast(transform.position, settings.circleCastRadius, angleRight, settings.collisionAvoidDistance, settings.obstacleLayer);
+
+        bool result = (front || left || right);
+
+        if (debug)
+        {
+            Color color = Color.white;
+
+            if (result)
+            {
+                color = Color.red;
+            }
+
+            Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
+            Debug.DrawRay(transform.position, angleLeft * settings.collisionAvoidDistance, color);
+            Debug.DrawRay(transform.position, angleRight * settings.collisionAvoidDistance, color);
+        }
+
+        return result;
     }
 
     private Vector3 FindDir()

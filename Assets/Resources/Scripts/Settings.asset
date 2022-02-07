@@ -15,15 +15,16 @@ MonoBehaviour:
   minSpeed: 6
   maxSpeed: 8
   collisionAvoidDistance: 10
-  circleCastRadius: 0.4
+  circleCastRadius: 0.6
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8
-  flockmateAvoidanceWeight: 2
-  flockCenteringWeight: 0.9
+  coneOfSightAngle: 90
+  flockmateAvoidanceWeight: 1.6
+  flockCenteringWeight: 0.8
   velocityMatchingWeight: 0.4
   obstacleAvoidanceWeight: 6
   maxInfluence: 10
-  flockmateAvoidanceRadius: 6
-  flockmateDetectionRadius: 8
+  flockmateAvoidanceRadius: 4
+  flockmateDetectionRadius: 5
   sightAngle: 110
