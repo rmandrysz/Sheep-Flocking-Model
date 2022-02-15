@@ -104,7 +104,7 @@ public class Agent : MonoBehaviour
         }
         if (debug)
         {
-            // Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
+            Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
         }
     }
 
@@ -143,6 +143,11 @@ public class Agent : MonoBehaviour
 
         foreach (var angle in AngleCalculator.angles)
         {
+            if (angle < settings.coneOfSightAngle)
+            {
+                continue;
+            }
+
             dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
 
             if(!Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer))
@@ -205,10 +210,10 @@ public class Agent : MonoBehaviour
         }
 
         direction = Vector3.ClampMagnitude(direction, settings.maxSpeed);
-        if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
-        {
-            direction = direction.normalized * settings.minSpeed;
-        }
+        // if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
+        // {
+        //     direction = direction.normalized * settings.minSpeed;
+        // }
     }
 
     private void ResetAccumulators()

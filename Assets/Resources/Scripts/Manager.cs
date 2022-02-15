@@ -72,7 +72,7 @@ public class Manager : MonoBehaviour
                     if (sqrDist <= avoidanceRadius * avoidanceRadius)
                     {
                         agent.flockmateCollisionAvoidance += -(offset / sqrDist);
-                        color = new Color(255f, 0f, 0f, Vector3.SqrMagnitude(offset / sqrDist));
+                        color = new Color(255f, 0f, 0f,  10f * Vector3.SqrMagnitude(offset / sqrDist));
                     }
                     if (agents[i].debug)
                     {
