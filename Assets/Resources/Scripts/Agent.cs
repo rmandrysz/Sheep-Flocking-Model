@@ -97,44 +97,54 @@ public class Agent : MonoBehaviour
     private void AvoidWalls()
     {
         Color color = Color.white;
-        if (IsDetectingColision())
-        {
-            color = Color.red;
-            RequestDirection(settings.obstacleAvoidanceWeight * FindDir(), "Avoid Obstacles");
-        }
+        IsDetectingColision();
+        // if (IsDetectingColision())
+        // {
+        //     color = Color.red;
+        //     RequestDirection(settings.obstacleAvoidanceWeight * FindDir(), "Avoid Obstacles");
+        // }
         if (debug)
         {
-            Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
+            // Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
         }
     }
 
-    private bool IsDetectingColision()
+    private void IsDetectingColision()
     {
-        float angle = settings.coneOfSightAngle / 2f;
-        Vector3 angleLeft = Quaternion.AngleAxis(-angle, Vector3.forward) * direction.normalized;
-        Vector3 angleRight = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+        // float angle = settings.coneOfSightAngle / 2f;
+        // Vector3 angleLeft = Quaternion.AngleAxis(-angle, Vector3.forward) * direction.normalized;
+        // Vector3 angleRight = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
 
-        RaycastHit2D front = Physics2D.CircleCast(transform.position, settings.circleCastRadius, direction, settings.collisionAvoidDistance, settings.obstacleLayer);
-        RaycastHit2D left = Physics2D.CircleCast(transform.position, settings.circleCastRadius, angleLeft, settings.collisionAvoidDistance, settings.obstacleLayer);
-        RaycastHit2D right = Physics2D.CircleCast(transform.position, settings.circleCastRadius, angleRight, settings.collisionAvoidDistance, settings.obstacleLayer);
+        foreach (var angle in AngleCalculator.detectionAngles)
+        {
+            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+            if (debug)
+            {
+                Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, Color.white);
+            }
 
-        bool result = (front || left || right);
+            if(Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer))
+            {
+                RequestDirection(settings.obstacleAvoidanceWeight * -dir, "Avoid Obstacles");
+                // break;
+            }
+        }
 
         if (debug)
         {
-            Color color = Color.white;
+        //     Color color = Color.white;
 
-            if (result)
-            {
-                color = Color.red;
-            }
+        //     if (result)
+        //     {
+        //         color = Color.red;
+        //     }
 
-            Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
-            Debug.DrawRay(transform.position, angleLeft * settings.collisionAvoidDistance, color);
-            Debug.DrawRay(transform.position, angleRight * settings.collisionAvoidDistance, color);
+        //     Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
+        //     Debug.DrawRay(transform.position, angleLeft * settings.collisionAvoidDistance, color);
+        //     Debug.DrawRay(transform.position, angleRight * settings.collisionAvoidDistance, color);
         }
 
-        return result;
+        // return result;
     }
 
     private Vector3 FindDir()
@@ -210,10 +220,10 @@ public class Agent : MonoBehaviour
         }
 
         direction = Vector3.ClampMagnitude(direction, settings.maxSpeed);
-        // if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
-        // {
-        //     direction = direction.normalized * settings.minSpeed;
-        // }
+        if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
+        {
+            direction = direction.normalized * settings.minSpeed;
+        }
     }
 
     private void ResetAccumulators()
