@@ -248,4 +248,12 @@ public class Agent : MonoBehaviour
     {
         return direction;
     }
+
+    public static float InvSqrt(float x, float softener) 
+    {
+        float eps = 0.0001f;
+        float result = Mathf.Pow(softener / (x + eps), 2f);
+
+        return result;
+    }
 }
