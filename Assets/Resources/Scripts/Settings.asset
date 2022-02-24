@@ -22,7 +22,7 @@ MonoBehaviour:
   coneOfSightAngle: 30
   flockmateAvoidanceWeight: 0.9
   flockCenteringWeight: 0.2
-  velocityMatchingWeight: 0.3
+  velocityMatchingWeight: 0.2
   obstacleAvoidanceWeight: 1
   maxInfluence: 4
   flockmateAvoidanceRadius: 4

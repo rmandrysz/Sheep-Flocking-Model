@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26390003535ea964a85ccd858eecd99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentNumber: 200
+  agentNumber: 100
   spawnRadius: 20
   agentPrefab: {fileID: 6951958027865408579, guid: 2334da2a96e704d439d1e519c261ea26, type: 3}
 --- !u!4 &293902961
