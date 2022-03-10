@@ -126,19 +126,23 @@ public class Agent : MonoBehaviour
         // float angle = settings.coneOfSightAngle / 2f;
         // Vector3 angleLeft = Quaternion.AngleAxis(-angle, Vector3.forward) * direction.normalized;
         // Vector3 angleRight = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+        RaycastHit2D raycastHit;
 
         foreach (var angle in AngleCalculator.detectionAngles)
         {
             Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+            raycastHit = Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer);
+
             if (debug)
             {
                 Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, Color.white);
             }
 
-            if(Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer))
+            if(raycastHit)
             {
-                RequestDirection(settings.obstacleAvoidanceWeight * -dir, "Avoid Obstacles");
-                // break;
+                float modifier = InvSquare(raycastHit.distance, 3);
+                // RequestDirection(settings.obstacleAvoidanceWeight * modifier * 0.5f *  FindDir(), "Avoid Obstacles");
+                RequestDirection(settings.obstacleAvoidanceWeight * modifier * -dir, "Reduce Velocity");
             }
         }
 
@@ -196,38 +200,12 @@ public class Agent : MonoBehaviour
 
     private void UpdateDirection()
     {
-        float magnitudeLeft = settings.maxInfluence;
-        if(debug)
-        {
-            Debug.Log("Calculating Direction. Magnitude left: " + magnitudeLeft);
-        }
-
         foreach (var request in accumulator)
         {
-            if (magnitudeLeft >= request.magnitude)
+            direction += request.direction * request.magnitude;
+            if(debug)
             {
-                direction += request.direction * request.magnitude;
-                magnitudeLeft -= request.magnitude;
-                if(debug)
-                {
-                    Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude +  ", magnitude left: " + magnitudeLeft);
-                }
-            }
-            else if (magnitudeLeft > 0)
-            {
-                direction += request.direction * magnitudeLeft;
-                magnitudeLeft = 0;
-                if(debug)
-                {
-                    Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude +  ", Accumulator exceeded. No magnitude left");
-                }
-            }
-            else 
-            {
-                if(debug)
-                {
-                    Debug.Log("Accumulator overflow, skipping request: " + request.name);
-                }
+                Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
             }
         }
 
