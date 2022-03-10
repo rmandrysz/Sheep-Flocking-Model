@@ -23,6 +23,7 @@ public class AgentSettings : ScriptableObject
 
     [Header ("Flockmate Avoidance")]
     public float flockmateAvoidanceRadius = 3f;
+    public float flockmateAvoidanceSoftener = 1f;
 
     [Header ("Flocking")]
     public float flockmateDetectionRadius = 5f;

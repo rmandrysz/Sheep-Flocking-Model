@@ -64,6 +64,18 @@ public class Agent : MonoBehaviour
         }
     }
 
+    public void AddFlockmateAvoidance(Vector3 offset)
+    {
+        float distance = offset.magnitude;
+        Vector3 newAvoidance = ((-offset / distance) * InvSquare(distance, settings.flockmateAvoidanceSoftener));
+        Vector3 oldAvoidance = (-offset / (distance * distance));
+        flockmateCollisionAvoidance += newAvoidance;
+        if (debug)
+        {
+            Debug.Log(string.Format("InvSquare: {0}, OldMethod: {0}", newAvoidance, oldAvoidance));
+        }
+    }
+
     private void MatchVelocity()
     {
         if (numFlockmates == 0)
@@ -249,10 +261,10 @@ public class Agent : MonoBehaviour
         return direction;
     }
 
-    public static float InvSqrt(float x, float softener) 
+    public static float InvSquare(float x, float softener) 
     {
-        float eps = 0.0001f;
-        float result = Mathf.Pow(softener / (x + eps), 2f);
+        float eps = 0.000001f;
+        float result = Mathf.Pow((x + eps) / softener, -2);
 
         return result;
     }

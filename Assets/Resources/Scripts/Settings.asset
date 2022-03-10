@@ -26,5 +26,6 @@ MonoBehaviour:
   obstacleAvoidanceWeight: 1
   maxInfluence: 4
   flockmateAvoidanceRadius: 4
+  flockmateAvoidanceSoftener: 0.8
   flockmateDetectionRadius: 5
   sightAngle: 100
