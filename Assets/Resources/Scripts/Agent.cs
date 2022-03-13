@@ -35,17 +35,15 @@ public class Agent : MonoBehaviour
     }
 
     public void AgentUpdate(float dt)
-    {
-        RotateInMoveDirection();
-        Move(dt);
-                    
+    {                    
         AvoidWalls();
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
         MatchVelocity();
 
         UpdateDirection();
-        ResetAccumulators();
+        Move(dt);
+        RotateInMoveDirection();
     }
 
     private void Move(float dt)
@@ -108,24 +106,6 @@ public class Agent : MonoBehaviour
 
     private void AvoidWalls()
     {
-        Color color = Color.white;
-        IsDetectingColision();
-        // if (IsDetectingColision())
-        // {
-        //     color = Color.red;
-        //     RequestDirection(settings.obstacleAvoidanceWeight * FindDir(), "Avoid Obstacles");
-        // }
-        if (debug)
-        {
-            // Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
-        }
-    }
-
-    private void IsDetectingColision()
-    {
-        // float angle = settings.coneOfSightAngle / 2f;
-        // Vector3 angleLeft = Quaternion.AngleAxis(-angle, Vector3.forward) * direction.normalized;
-        // Vector3 angleRight = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
         RaycastHit2D raycastHit;
 
         foreach (var angle in AngleCalculator.detectionAngles)
@@ -133,64 +113,20 @@ public class Agent : MonoBehaviour
             Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
             raycastHit = Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer);
 
-            if (debug)
-            {
-                Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, Color.white);
-            }
+            Color debugColor = Color.white;
 
             if(raycastHit)
             {
                 float modifier = InvSquare(raycastHit.distance, 3);
-                // RequestDirection(settings.obstacleAvoidanceWeight * modifier * 0.5f *  FindDir(), "Avoid Obstacles");
                 RequestDirection(settings.obstacleAvoidanceWeight * modifier * -dir, "Reduce Velocity");
-            }
-        }
-
-        if (debug)
-        {
-        //     Color color = Color.white;
-
-        //     if (result)
-        //     {
-        //         color = Color.red;
-        //     }
-
-        //     Debug.DrawRay(transform.position, direction.normalized * settings.collisionAvoidDistance, color);
-        //     Debug.DrawRay(transform.position, angleLeft * settings.collisionAvoidDistance, color);
-        //     Debug.DrawRay(transform.position, angleRight * settings.collisionAvoidDistance, color);
-        }
-
-        // return result;
-    }
-
-    private Vector3 FindDir()
-    {
-        Vector3 dir = direction;
-
-        foreach (var angle in AngleCalculator.angles)
-        {
-            if (angle < settings.coneOfSightAngle)
-            {
-                continue;
+                debugColor = Color.red;
             }
 
-            dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
-
-            if(!Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer))
-            {
-                if (debug)
-                {
-                    Debug.DrawRay(transform.position, dir * settings.collisionAvoidDistance, Color.white);
-                }
-                return dir;
-            }
             if (debug)
             {
-                Debug.DrawRay(transform.position, dir * settings.collisionAvoidDistance, Color.red);
+                Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, debugColor);
             }
         }
-        
-        return dir;
     }
 
     private void RequestDirection(Vector3 dir, string name)
@@ -216,7 +152,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private void ResetAccumulators()
+    public void ResetAccumulators()
     {
         accumulator = new List<(string name, float magnitude, Vector3 direction)>();
         flockmateCollisionAvoidance = Vector3.zero;

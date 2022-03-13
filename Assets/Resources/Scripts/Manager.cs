@@ -49,6 +49,7 @@ public class Manager : MonoBehaviour
         {
             var agent = agents[i];
 
+            agent.ResetAccumulators();
             agent.numFlockmates = 0;
 
             for (int j = 0; j < agentNumber; j++)
