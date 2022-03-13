@@ -23,8 +23,7 @@ MonoBehaviour:
   flockmateAvoidanceWeight: 0.9
   flockCenteringWeight: 0.2
   velocityMatchingWeight: 0.2
-  obstacleAvoidanceWeight: 0.2
-  maxInfluence: 4
+  obstacleAvoidanceWeight: 0.5
   flockmateAvoidanceRadius: 4
   flockmateAvoidanceSoftener: 0.8
   flockmateDetectionRadius: 5
