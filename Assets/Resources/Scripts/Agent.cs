@@ -7,6 +7,7 @@ public class Agent : MonoBehaviour
     public Vector3 direction;
 
     [HideInInspector]
+    public GameObject predator;
     public Vector3 flockmateCollisionAvoidance = Vector3.zero;
     public Vector3 averageFlockmateVelocity = Vector3.zero;
     public Vector3 averageFlockCenter = Vector3.zero;
@@ -31,7 +32,6 @@ public class Agent : MonoBehaviour
         direction = new Vector3(x, y, 0f).normalized;
 
         direction *= averageSpeed;
-
     }
 
     public void AgentUpdate(float dt)
@@ -40,6 +40,10 @@ public class Agent : MonoBehaviour
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
         MatchVelocity();
+        if (predator)
+        {
+            EscapeFromPredator();
+        }
 
         UpdateDirection();
         Move(dt);
@@ -129,6 +133,15 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private void EscapeFromPredator()
+    {
+        var offset = transform.position - predator.transform.position;
+        var escapeDirection = Vector3.Normalize(offset) * settings.escapeWeight;
+        escapeDirection *= InvSquare(offset.magnitude, 10f);
+
+        RequestDirection(escapeDirection, "Escape From Predator!");
+    }
+
     private void RequestDirection(Vector3 dir, string name)
     {
         accumulator.Add((name, dir.magnitude, dir.normalized));
@@ -162,10 +175,7 @@ public class Agent : MonoBehaviour
 
     private void RotateInMoveDirection()
     {
-        Vector3 targetPos = transform.position + (direction);
-        var relativePos = targetPos - transform.position;
-
-        var angle = Mathf.Atan2(relativePos.y, relativePos.x) * Mathf.Rad2Deg - 90f;
+        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.rotation = rotation;
     }

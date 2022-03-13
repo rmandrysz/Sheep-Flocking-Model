@@ -19,6 +19,7 @@ public class AgentSettings : ScriptableObject
     public float flockCenteringWeight = 1f;
     public float velocityMatchingWeight = 1f;
     public float obstacleAvoidanceWeight = 2f;
+    public float escapeWeight = 0.7f;
 
     [Header ("Flockmate Avoidance")]
     public float flockmateAvoidanceRadius = 3f;

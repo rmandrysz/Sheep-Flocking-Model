@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour
     public float spawnRadius = 20f;
 
     List<Agent> agents;
+    public GameObject predator;
 
     [SerializeField]
     private GameObject agentPrefab;
@@ -34,7 +35,11 @@ public class Manager : MonoBehaviour
             float y = Random.Range(-spawnRadius, spawnRadius);
             Vector2 position = new Vector3(x, y);
 
-            localAgents.Add(GameObject.Instantiate(agentPrefab, position, Quaternion.identity).GetComponent<Agent>());
+            localAgents.Add(GameObject.Instantiate(agentPrefab, position, Quaternion.identity, transform).GetComponent<Agent>());
+            if (predator)
+            {
+                localAgents[i].predator = predator;
+            }
         }
 
         return localAgents;
