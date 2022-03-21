@@ -8,7 +8,7 @@ public class Manager : MonoBehaviour
     public float spawnRadius = 20f;
 
     List<Agent> agents;
-    public GameObject predator;
+    public Transform predator;
 
     [SerializeField]
     private GameObject agentPrefab;

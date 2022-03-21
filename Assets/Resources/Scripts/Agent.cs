@@ -7,7 +7,7 @@ public class Agent : MonoBehaviour
     public Vector3 direction;
 
     [HideInInspector]
-    public GameObject predator;
+    public Transform predator;
     public Vector3 flockmateCollisionAvoidance = Vector3.zero;
     public Vector3 averageFlockmateVelocity = Vector3.zero;
     public Vector3 averageFlockCenter = Vector3.zero;
@@ -16,6 +16,8 @@ public class Agent : MonoBehaviour
     public bool debug = false;
 
     private float averageSpeed;
+    private float minSpeed;
+    private float maxSpeed;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
     [Header ("References")]
@@ -25,7 +27,7 @@ public class Agent : MonoBehaviour
     {
         ResetAccumulators();
 
-        averageSpeed = (settings.minSpeed + settings.maxSpeed) / 2f;
+        averageSpeed = (settings.initialMinSpeed + settings.initialMaxSpeed) / 2f;
 
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
@@ -35,7 +37,8 @@ public class Agent : MonoBehaviour
     }
 
     public void AgentUpdate(float dt)
-    {                    
+    {
+        AdjustSpeedLimits();          
         AvoidWalls();
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
@@ -59,10 +62,17 @@ public class Agent : MonoBehaviour
 
     private void AvoidFlockmateCollisions()
     {
+        float weight = settings.flockmateAvoidanceWeight;
+        if (predator)
+        {
+            weight *= (1 + (Sigmoid() * settings.adjustedFlockmateAvoidanceWeight));
+        }
+
         RequestDirection(settings.flockmateAvoidanceWeight * flockmateCollisionAvoidance, "Avoid Flockmates");
+
         if(debug)
         {
-            Debug.DrawRay(transform.position, flockmateCollisionAvoidance * settings.flockmateAvoidanceWeight, Color.magenta);
+            Debug.DrawRay(transform.position, flockmateCollisionAvoidance * weight, Color.magenta);
         }
     }
 
@@ -84,8 +94,14 @@ public class Agent : MonoBehaviour
         {
             return;
         }
+        float weight = settings.velocityMatchingWeight;
+        if (predator)
+        {
+            weight *= (1 + (Sigmoid() * settings.adjustedVelocityMatchingWeight));
+        }
+
         averageFlockmateVelocity /= numFlockmates;
-        RequestDirection(settings.velocityMatchingWeight * averageFlockmateVelocity, "Match Velocity");
+        RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
 
         if(debug)
         {
@@ -99,8 +115,15 @@ public class Agent : MonoBehaviour
         {
             return;
         }
+
+        float weight = settings.flockCenteringWeight;
+        if (predator)
+        {
+            weight *= (1 + (Sigmoid() * settings.adjustedFlockCenteringWeight));
+        }
+
         averageFlockCenter /= numFlockmates;
-        RequestDirection(settings.flockCenteringWeight * (averageFlockCenter - transform.position), "Move to Center");
+        RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
@@ -135,7 +158,7 @@ public class Agent : MonoBehaviour
 
     private void EscapeFromPredator()
     {
-        var offset = transform.position - predator.transform.position;
+        var offset = transform.position - predator.position;
         var escapeDirection = Vector3.Normalize(offset) * settings.escapeWeight;
         escapeDirection *= InvSquare(offset.magnitude, 10f);
 
@@ -145,6 +168,17 @@ public class Agent : MonoBehaviour
     private void RequestDirection(Vector3 dir, string name)
     {
         accumulator.Add((name, dir.magnitude, dir.normalized));
+    }
+
+    private void AdjustSpeedLimits()
+    {
+        var diff = settings.finalMaxSpeed - settings.initialMaxSpeed;
+        maxSpeed = settings.initialMaxSpeed + (diff * Sigmoid());
+
+        diff = settings.finalMinSpeed - settings.initialMinSpeed;
+        minSpeed = settings.initialMinSpeed + (diff * Sigmoid());
+
+        averageSpeed = (maxSpeed + minSpeed) / 2f;
     }
 
     private void UpdateDirection()
@@ -158,10 +192,10 @@ public class Agent : MonoBehaviour
             }
         }
 
-        direction = Vector3.ClampMagnitude(direction, settings.maxSpeed);
-        if (direction.sqrMagnitude < (settings.minSpeed * settings.minSpeed))
+        direction = Vector3.ClampMagnitude(direction, settings.initialMaxSpeed);
+        if (direction.sqrMagnitude < (minSpeed * minSpeed))
         {
-            direction = direction.normalized * settings.minSpeed;
+            direction = direction.normalized * settings.initialMinSpeed;
         }
     }
 
@@ -191,5 +225,12 @@ public class Agent : MonoBehaviour
         float result = Mathf.Pow((x + eps) / softener, -2);
 
         return result;
+    }
+
+    public float Sigmoid()
+    {
+        var offset = transform.position - predator.position;
+        return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
+        // return 0f;
     }
 }

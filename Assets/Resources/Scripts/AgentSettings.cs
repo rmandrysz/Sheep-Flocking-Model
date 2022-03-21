@@ -5,8 +5,10 @@ using UnityEngine;
 [CreateAssetMenu]
 public class AgentSettings : ScriptableObject
 {
-    public float minSpeed = 5f;
-    public float maxSpeed = 10f;
+    public float initialMinSpeed = 0f;
+    public float finalMinSpeed = 2f;
+    public float initialMaxSpeed = 10f;
+    public float finalMaxSpeed = 15f;
 
     [Header ("Collision Avoidance")]
     public float collisionAvoidDistance = 20f;
@@ -28,4 +30,12 @@ public class AgentSettings : ScriptableObject
     [Header ("Flocking")]
     public float flockmateDetectionRadius = 5f;
     public float sightAngle = 120f;
+
+    [Header ("Predator Adaptation")]
+    public float flightZoneRadius = 50f;
+
+    [Header ("Adjusted Weights")]
+    public float adjustedFlockmateAvoidanceWeight = 0.2f;
+    public float adjustedFlockCenteringWeight = 0.8f;
+    public float adjustedVelocityMatchingWeight = 0.5f;
 }
