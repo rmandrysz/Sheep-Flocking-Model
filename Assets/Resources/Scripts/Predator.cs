@@ -6,6 +6,7 @@ public class Predator : MonoBehaviour
 {
     public Vector3 targetPosition = Vector3.zero;
     public float speed = 4f;
+    public bool debug = false;
 
     private void Update() 
     {
@@ -13,7 +14,10 @@ public class Predator : MonoBehaviour
         {
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 0;
-            print(targetPosition);
+            if(debug)
+            {
+                print(targetPosition);
+            }
         }
         if (Input.GetMouseButtonDown(1))
         {
