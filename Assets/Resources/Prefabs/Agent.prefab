@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   direction: {x: 0, y: 0, z: 0}
+  predator: {fileID: 0}
   flockmateCollisionAvoidance: {x: 0, y: 0, z: 0}
   averageFlockmateVelocity: {x: 0, y: 0, z: 0}
   averageFlockCenter: {x: 0, y: 0, z: 0}
@@ -95,7 +96,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 89f83e57c685e2848bdb1456ecc64e3a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 96f96d7388f59bc4d8cf2aeb9721a0fe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
