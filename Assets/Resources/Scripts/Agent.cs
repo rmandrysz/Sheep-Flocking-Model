@@ -229,6 +229,10 @@ public class Agent : MonoBehaviour
 
     public float Sigmoid()
     {
+        if (!predator)
+        {
+            return 0;
+        }
         var offset = transform.position - predator.position;
         return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
         // return 0f;

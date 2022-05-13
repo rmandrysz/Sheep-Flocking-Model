@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour
     public float spawnRadius = 20f;
 
     List<Agent> agents;
+    public GameObject predatorPrefab;
     public Transform predator;
 
     [SerializeField]
@@ -24,6 +25,19 @@ public class Manager : MonoBehaviour
     {
         Calculate();
         AgentUpdate(Time.fixedDeltaTime);
+    }
+    
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.S) && !predator)
+        {
+            print("aaaaaaaa1");
+            SpawnPredator();
+        }
+        if (Input.GetKeyDown(KeyCode.D) && predator)
+        {
+            print("bbbbbbbbbbbbbbbb1");
+            DespawnPredator();
+        }
     }
 
     public List<Agent> Spawn()
@@ -95,5 +109,22 @@ public class Manager : MonoBehaviour
         {
             agent.AgentUpdate(dt);
         }
+    }
+
+    private void SpawnPredator()
+    {
+        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        targetPosition.z = 0;
+
+        predator = GameObject.Instantiate(predatorPrefab, targetPosition, Quaternion.identity).transform;
+        foreach(var agent in agents)
+        {
+            agent.predator = predator;
+        }
+    }
+
+    private void DespawnPredator()
+    {
+        Destroy(predator.gameObject);
     }
 }
