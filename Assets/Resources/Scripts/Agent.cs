@@ -15,9 +15,9 @@ public class Agent : MonoBehaviour
 
     public bool debug = false;
 
-    private float averageSpeed;
     private float minSpeed;
     private float maxSpeed;
+    private float currentSpeed;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
     [Header ("References")]
@@ -27,13 +27,9 @@ public class Agent : MonoBehaviour
     {
         ResetAccumulators();
 
-        averageSpeed = (settings.initialMinSpeed + settings.initialMaxSpeed) / 2f;
-
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
         direction = new Vector3(x, y, 0f).normalized;
-
-        direction *= averageSpeed;
     }
 
     public void AgentUpdate(float dt)
@@ -55,9 +51,9 @@ public class Agent : MonoBehaviour
 
     private void Move(float dt)
     {
-        transform.Translate(direction * dt, Space.World);
+        transform.Translate(direction * currentSpeed * dt, Space.World);
 
-        direction = direction.normalized * averageSpeed;
+        direction = direction.normalized;
     }
 
     private void AvoidFlockmateCollisions()
@@ -97,7 +93,7 @@ public class Agent : MonoBehaviour
         float weight = settings.velocityMatchingWeight;
         if (predator)
         {
-            weight *= (1 + (Sigmoid() * settings.adjustedVelocityMatchingWeight));
+            weight *= (1 + (Sigmoid(90f) * settings.adjustedVelocityMatchingWeight));
         }
 
         averageFlockmateVelocity /= numFlockmates;
@@ -178,24 +174,28 @@ public class Agent : MonoBehaviour
         diff = settings.finalMinSpeed - settings.initialMinSpeed;
         minSpeed = settings.initialMinSpeed + (diff * Sigmoid());
 
-        averageSpeed = (maxSpeed + minSpeed) / 2f;
+        currentSpeed = 0f;
     }
 
     private void UpdateDirection()
     {
         foreach (var request in accumulator)
         {
-            direction += request.direction * request.magnitude;
+            direction += request.direction;
+            currentSpeed += request.magnitude;
             if(debug)
             {
                 Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
             }
         }
 
-        direction = Vector3.ClampMagnitude(direction, settings.initialMaxSpeed);
-        if (direction.sqrMagnitude < (minSpeed * minSpeed))
+        if (currentSpeed > maxSpeed)
         {
-            direction = direction.normalized * settings.initialMinSpeed;
+            currentSpeed = maxSpeed;
+        }
+        else if (currentSpeed < minSpeed)
+        {
+            currentSpeed = minSpeed;
         }
     }
 
@@ -227,14 +227,14 @@ public class Agent : MonoBehaviour
         return result;
     }
 
-    public float Sigmoid()
+    public float Sigmoid(float softeningFactor = 1f)
     {
         if (!predator)
         {
             return 0;
         }
         var offset = transform.position - predator.position;
-        return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
+        return ((1 / Mathf.PI) * (Mathf.Atan(settings.flightZoneRadius - offset.magnitude) / softeningFactor) + 0.5f);
         // return 0f;
     }
 }
