@@ -61,7 +61,7 @@ public class Agent : MonoBehaviour
         float weight = settings.flockmateAvoidanceWeight;
         if (predator)
         {
-            weight *= (1 + (Sigmoid() * settings.adjustedFlockmateAvoidanceWeight));
+            weight = (1 + (Sigmoid() * settings.adjustedFlockmateAvoidanceWeight));
         }
 
         RequestDirection(settings.flockmateAvoidanceWeight * flockmateCollisionAvoidance, "Avoid Flockmates");
@@ -90,19 +90,20 @@ public class Agent : MonoBehaviour
         {
             return;
         }
-        float weight = settings.velocityMatchingWeight;
-        if (predator)
-        {
-            weight *= (1 + (Sigmoid(90f) * settings.adjustedVelocityMatchingWeight));
-        }
-
-        averageFlockmateVelocity /= numFlockmates;
-        RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
-
+        
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockmateVelocity, Color.blue);
         }
+
+        if (!predator)
+        {
+            return;
+        }
+
+        float weight = (settings.velocityMatchingWeight + (Sigmoid(90f) * settings.adjustedVelocityMatchingWeight));
+        averageFlockmateVelocity /= numFlockmates;
+        RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
 
     private void MoveToFlockCenter()
@@ -112,19 +113,21 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        float weight = settings.flockCenteringWeight;
-        if (predator)
-        {
-            weight *= (1 + (Sigmoid() * settings.adjustedFlockCenteringWeight));
-        }
-
-        averageFlockCenter /= numFlockmates;
-        RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
             Debug.Log("Average Flock Center: " + averageFlockCenter);
         }
+
+        if (!predator)
+        {
+            return;
+        }
+
+        float weight = (settings.flockCenteringWeight + (Sigmoid() * settings.adjustedFlockCenteringWeight));
+        averageFlockCenter /= numFlockmates;
+        RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
+        
     }
 
     private void AvoidWalls()
