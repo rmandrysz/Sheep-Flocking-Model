@@ -61,7 +61,8 @@ public class Agent : MonoBehaviour
         float weight = settings.flockmateAvoidanceWeight;
         if (predator)
         {
-            weight = (1 + (Sigmoid() * settings.adjustedFlockmateAvoidanceWeight));
+            float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
+            weight = (1 + (Sigmoid() * diff));
         }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
@@ -100,8 +101,8 @@ public class Agent : MonoBehaviour
         {
             return;
         }
-
-        float weight = (settings.velocityMatchingWeight + (Sigmoid(90f) * settings.adjustedVelocityMatchingWeight));
+        float diff = settings.adjustedVelocityMatchingWeight - settings.velocityMatchingWeight;
+        float weight = (settings.velocityMatchingWeight + (Sigmoid(90f) * diff));
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
@@ -124,7 +125,8 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        float weight = (settings.flockCenteringWeight + (Sigmoid() * settings.adjustedFlockCenteringWeight));
+        float diff = settings.adjustedFlockCenteringWeight- settings.flockCenteringWeight;
+        float weight = (settings.flockCenteringWeight + (Sigmoid() * diff));
         averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
         
