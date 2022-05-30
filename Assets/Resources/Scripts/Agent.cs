@@ -64,7 +64,7 @@ public class Agent : MonoBehaviour
             weight = (1 + (Sigmoid() * settings.adjustedFlockmateAvoidanceWeight));
         }
 
-        RequestDirection(settings.flockmateAvoidanceWeight * flockmateCollisionAvoidance, "Avoid Flockmates");
+        RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
 
         if(debug)
         {
