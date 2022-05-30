@@ -232,7 +232,7 @@ public class Agent : MonoBehaviour
         return result;
     }
 
-    public float Sigmoid(float softeningFactor = 1f)
+    public float Sigmoid()
     {
         if (!predator)
         {
