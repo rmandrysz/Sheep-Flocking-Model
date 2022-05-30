@@ -15,9 +15,9 @@ public class Agent : MonoBehaviour
 
     public bool debug = false;
 
+    private float averageSpeed;
     private float minSpeed;
     private float maxSpeed;
-    private float currentSpeed;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
     [Header ("References")]
@@ -27,9 +27,13 @@ public class Agent : MonoBehaviour
     {
         ResetAccumulators();
 
+        averageSpeed = (settings.initialMinSpeed + settings.initialMaxSpeed) / 2f;
+
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
         direction = new Vector3(x, y, 0f).normalized;
+
+        direction *= averageSpeed;
     }
 
     public void AgentUpdate(float dt)
@@ -51,9 +55,9 @@ public class Agent : MonoBehaviour
 
     private void Move(float dt)
     {
-        transform.Translate(direction * currentSpeed * dt, Space.World);
+        transform.Translate(direction * dt, Space.World);
 
-        direction = direction.normalized;
+        direction = direction.normalized * averageSpeed;
     }
 
     private void AvoidFlockmateCollisions()
@@ -179,28 +183,24 @@ public class Agent : MonoBehaviour
         diff = settings.finalMinSpeed - settings.initialMinSpeed;
         minSpeed = settings.initialMinSpeed + (diff * Sigmoid());
 
-        currentSpeed = 0f;
+        averageSpeed = (maxSpeed + minSpeed) / 2f;
     }
 
     private void UpdateDirection()
     {
         foreach (var request in accumulator)
         {
-            direction += request.direction;
-            currentSpeed += request.magnitude;
+            direction += request.direction * request.magnitude;
             if(debug)
             {
                 Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
             }
         }
 
-        if (currentSpeed > maxSpeed)
+        direction = Vector3.ClampMagnitude(direction, settings.initialMaxSpeed);
+        if (direction.sqrMagnitude < (minSpeed * minSpeed))
         {
-            currentSpeed = maxSpeed;
-        }
-        else if (currentSpeed < minSpeed)
-        {
-            currentSpeed = minSpeed;
+            direction = direction.normalized * settings.initialMinSpeed;
         }
     }
 
@@ -239,7 +239,7 @@ public class Agent : MonoBehaviour
             return 0;
         }
         var offset = transform.position - predator.position;
-        return ((1 / Mathf.PI) * (Mathf.Atan(settings.flightZoneRadius - offset.magnitude) / softeningFactor) + 0.5f);
+        return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
         // return 0f;
     }
 }
