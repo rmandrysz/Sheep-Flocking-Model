@@ -15,7 +15,6 @@ public class Agent : MonoBehaviour
 
     public bool debug = false;
 
-    private float averageSpeed;
     private float minSpeed;
     private float maxSpeed;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
@@ -27,13 +26,9 @@ public class Agent : MonoBehaviour
     {
         ResetAccumulators();
 
-        averageSpeed = (settings.initialMinSpeed + settings.initialMaxSpeed) / 2f;
-
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
         direction = new Vector3(x, y, 0f).normalized;
-
-        direction *= averageSpeed;
     }
 
     public void AgentUpdate(float dt)
@@ -57,7 +52,7 @@ public class Agent : MonoBehaviour
     {
         transform.Translate(direction * dt, Space.World);
 
-        direction = direction.normalized * averageSpeed;
+        direction = direction.normalized;
     }
 
     private void AvoidFlockmateCollisions()
@@ -181,9 +176,7 @@ public class Agent : MonoBehaviour
         maxSpeed = settings.initialMaxSpeed + (diff * Sigmoid());
 
         diff = settings.finalMinSpeed - settings.initialMinSpeed;
-        minSpeed = settings.initialMinSpeed + (diff * Sigmoid());
-
-        averageSpeed = (maxSpeed + minSpeed) / 2f;
+        minSpeed = settings.initialMinSpeed + (diff * Sigmoid());    
     }
 
     private void UpdateDirection()
@@ -197,10 +190,10 @@ public class Agent : MonoBehaviour
             }
         }
 
-        direction = Vector3.ClampMagnitude(direction, settings.initialMaxSpeed);
+        direction = Vector3.ClampMagnitude(direction, maxSpeed);
         if (direction.sqrMagnitude < (minSpeed * minSpeed))
         {
-            direction = direction.normalized * settings.initialMinSpeed;
+            direction = direction.normalized * minSpeed;
         }
     }
 
