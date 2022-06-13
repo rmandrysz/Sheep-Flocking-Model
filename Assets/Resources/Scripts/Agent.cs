@@ -45,12 +45,16 @@ public class Agent : MonoBehaviour
 
         UpdateDirection();
         Move(dt);
-        RotateInMoveDirection();
     }
 
     private void Move(float dt)
     {
         transform.Translate(direction * dt, Space.World);
+
+        if (direction.sqrMagnitude != 0f)
+        {
+            RotateInMoveDirectionSmooth();
+        }
 
         direction = direction.normalized;
     }
@@ -128,7 +132,6 @@ public class Agent : MonoBehaviour
         float weight = (settings.flockCenteringWeight + (Sigmoid() * diff));
         averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
-        
     }
 
     private void AvoidWalls()
@@ -210,6 +213,14 @@ public class Agent : MonoBehaviour
         var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.rotation = rotation;
+    }
+
+    private void RotateInMoveDirectionSmooth()
+    {
+        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * settings.rotationSpeed);
     }
 
     public Vector3 GetDirection()

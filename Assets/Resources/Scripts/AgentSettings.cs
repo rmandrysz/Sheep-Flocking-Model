@@ -38,4 +38,7 @@ public class AgentSettings : ScriptableObject
     public float adjustedFlockmateAvoidanceWeight = 0.2f;
     public float adjustedFlockCenteringWeight = 0.8f;
     public float adjustedVelocityMatchingWeight = 0.5f;
+
+    [Header ("Visuals")]
+    public float rotationSpeed = 1f;
 }
