@@ -17,6 +17,7 @@ public class Agent : MonoBehaviour
 
     private float minSpeed;
     private float maxSpeed;
+    private Vector3 previousDirection;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
     [Header ("References")]
@@ -29,6 +30,7 @@ public class Agent : MonoBehaviour
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
         direction = new Vector3(x, y, 0f).normalized;
+        previousDirection = Vector3.zero;
     }
 
     public void AgentUpdate(float dt)
@@ -51,12 +53,29 @@ public class Agent : MonoBehaviour
     {
         transform.Translate(direction * dt, Space.World);
 
+        if (direction.sqrMagnitude < 0.01f)
+        {
+            if (debug)
+            {
+                Debug.Log("Ignoring direction");
+            }
+            previousDirection = direction;
+            direction = Vector3.zero;
+            return;
+        }
+
         if (direction.sqrMagnitude != 0f)
         {
             RotateInMoveDirectionSmooth();
         }
 
-        direction = direction.normalized;
+        if (debug) 
+        {
+            Debug.Log(direction.magnitude);
+        }
+
+        previousDirection = direction;
+        direction = Vector3.zero;
     }
 
     private void AvoidFlockmateCollisions()
@@ -84,7 +103,7 @@ public class Agent : MonoBehaviour
         flockmateCollisionAvoidance += newAvoidance;
         if (debug)
         {
-            Debug.Log(string.Format("InvSquare: {0}, OldMethod: {0}", newAvoidance, oldAvoidance));
+            // Debug.Log(string.Format("InvSquare: {0}, OldMethod: {0}", newAvoidance, oldAvoidance));
         }
     }
 
@@ -120,7 +139,7 @@ public class Agent : MonoBehaviour
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
-            Debug.Log("Average Flock Center: " + averageFlockCenter);
+            // Debug.Log("Average Flock Center: " + averageFlockCenter);
         }
 
         if (!predator)
@@ -140,7 +159,7 @@ public class Agent : MonoBehaviour
 
         foreach (var angle in AngleCalculator.detectionAngles)
         {
-            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * direction.normalized;
+            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * previousDirection.normalized;
             raycastHit = Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer);
 
             Color debugColor = Color.white;

@@ -32,6 +32,7 @@ MonoBehaviour:
   flockmateDetectionRadius: 5
   sightAngle: 100
   flightZoneRadius: 20
-  adjustedFlockmateAvoidanceWeight: 0.2
-  adjustedFlockCenteringWeight: 0.8
+  adjustedFlockmateAvoidanceWeight: 0.4
+  adjustedFlockCenteringWeight: 0.9
   adjustedVelocityMatchingWeight: 0.5
+  rotationSpeed: 10
