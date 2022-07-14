@@ -47,6 +47,12 @@ public class Agent : MonoBehaviour
 
         UpdateDirection();
         Move(dt);
+
+        if (predator && debug)
+        {
+            float distance = (predator.position - transform.position).magnitude;
+            Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
+        }
     }
 
     private void Move(float dt)
@@ -55,10 +61,6 @@ public class Agent : MonoBehaviour
 
         if (direction.sqrMagnitude < 0.01f)
         {
-            if (debug)
-            {
-                Debug.Log("Ignoring direction");
-            }
             previousDirection = direction;
             direction = Vector3.zero;
             return;
@@ -67,11 +69,6 @@ public class Agent : MonoBehaviour
         if (direction.sqrMagnitude != 0f)
         {
             RotateInMoveDirectionSmooth();
-        }
-
-        if (debug) 
-        {
-            Debug.Log(direction.magnitude);
         }
 
         previousDirection = direction;
@@ -84,7 +81,7 @@ public class Agent : MonoBehaviour
         if (predator)
         {
             float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
-            weight = (1 + (Sigmoid() * diff));
+            weight = PredatorSmoothStep() * settings.adjustedFlockmateAvoidanceWeight;
         }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
@@ -124,7 +121,7 @@ public class Agent : MonoBehaviour
             return;
         }
         float diff = settings.adjustedVelocityMatchingWeight - settings.velocityMatchingWeight;
-        float weight = (settings.velocityMatchingWeight + (Sigmoid(90f) * diff));
+        float weight = PredatorSmoothStep() * settings.adjustedVelocityMatchingWeight;
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
@@ -148,7 +145,7 @@ public class Agent : MonoBehaviour
         }
 
         float diff = settings.adjustedFlockCenteringWeight- settings.flockCenteringWeight;
-        float weight = (settings.flockCenteringWeight + (Sigmoid() * diff));
+        float weight = PredatorSmoothStep() * settings.adjustedFlockCenteringWeight;
         averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }
@@ -195,10 +192,7 @@ public class Agent : MonoBehaviour
     private void AdjustSpeedLimits()
     {
         var diff = settings.finalMaxSpeed - settings.initialMaxSpeed;
-        maxSpeed = settings.initialMaxSpeed + (diff * Sigmoid());
-
-        diff = settings.finalMinSpeed - settings.initialMinSpeed;
-        minSpeed = settings.initialMinSpeed + (diff * Sigmoid());    
+        maxSpeed = settings.initialMaxSpeed + (diff * PredatorSmoothStep());  
     }
 
     private void UpdateDirection()
@@ -264,5 +258,24 @@ public class Agent : MonoBehaviour
         var offset = transform.position - predator.position;
         return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
         // return 0f;
+    }
+
+    private float PredatorSmoothStep(float min = 0f, float max = 1f)
+    {
+        if (!predator)
+        {
+            return min;
+        }
+
+        float distance = (predator.position - transform.position).magnitude;
+        float flipped = settings.flightZoneRadius -  distance;
+
+        flipped = Mathf.Clamp(flipped, 0f, settings.flightZoneRadius);
+
+        float interpolationPoint = (flipped / settings.flightZoneRadius);
+
+        float result = Mathf.SmoothStep(min, max, interpolationPoint);
+
+        return result;
     }
 }

@@ -30,12 +30,10 @@ public class Manager : MonoBehaviour
     private void Update() {
         if (Input.GetKeyDown(KeyCode.S) && !predator)
         {
-            print("aaaaaaaa1");
             SpawnPredator();
         }
         if (Input.GetKeyDown(KeyCode.D) && predator)
         {
-            print("bbbbbbbbbbbbbbbb1");
             DespawnPredator();
         }
     }

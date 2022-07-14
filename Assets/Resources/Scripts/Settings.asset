@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialMinSpeed: 0
   finalMinSpeed: 2
-  initialMaxSpeed: 10
-  finalMaxSpeed: 15
+  initialMaxSpeed: 7
+  finalMaxSpeed: 12
   collisionAvoidDistance: 5
   circleCastRadius: 0.1
   obstacleLayer:
@@ -31,8 +31,8 @@ MonoBehaviour:
   flockmateAvoidanceSoftener: 0.8
   flockmateDetectionRadius: 5
   sightAngle: 100
-  flightZoneRadius: 20
-  adjustedFlockmateAvoidanceWeight: 0.4
-  adjustedFlockCenteringWeight: 0.9
-  adjustedVelocityMatchingWeight: 0.5
-  rotationSpeed: 10
+  flightZoneRadius: 50
+  adjustedFlockmateAvoidanceWeight: 1.8
+  adjustedFlockCenteringWeight: 0.4
+  adjustedVelocityMatchingWeight: 0.4
+  rotationSpeed: 4
