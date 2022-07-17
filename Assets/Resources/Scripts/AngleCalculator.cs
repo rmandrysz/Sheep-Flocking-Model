@@ -8,7 +8,7 @@ public static class AngleCalculator
     public static List<float> detectionAngles;
     public static float collisionAvoidAngleIncrement = 6f;
     public static float collisionAvoidMaxAngle = 140f;
-    public static float collisionDetectionAngleIncrement = 30f;
+    public static float collisionDetectionAngleIncrement = 20f;
 
     static AngleCalculator()
     {

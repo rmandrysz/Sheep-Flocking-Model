@@ -81,7 +81,7 @@ public class Agent : MonoBehaviour
         if (predator)
         {
             float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
-            weight = PredatorSmoothStep() * settings.adjustedFlockmateAvoidanceWeight;
+            weight += PredatorSmoothStep() * diff;
         }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
@@ -144,7 +144,7 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        float diff = settings.adjustedFlockCenteringWeight- settings.flockCenteringWeight;
+        float diff = settings.adjustedFlockCenteringWeight - settings.flockCenteringWeight;
         float weight = PredatorSmoothStep() * settings.adjustedFlockCenteringWeight;
         averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
@@ -178,8 +178,8 @@ public class Agent : MonoBehaviour
     private void EscapeFromPredator()
     {
         var offset = transform.position - predator.position;
-        var escapeDirection = Vector3.Normalize(offset) * settings.escapeWeight;
-        escapeDirection *= InvSquare(offset.magnitude, 10f);
+        var escapeDirection = Vector3.Normalize(offset) * PredatorSmoothStep() * settings.escapeWeight;
+        // escapeDirection *= InvSquare(offset.magnitude, 10f);
 
         RequestDirection(escapeDirection, "Escape From Predator!");
     }
@@ -260,7 +260,7 @@ public class Agent : MonoBehaviour
         // return 0f;
     }
 
-    private float PredatorSmoothStep(float min = 0f, float max = 1f)
+    private float PredatorSmoothStep(float min = 0f, float max = 3f)
     {
         if (!predator)
         {

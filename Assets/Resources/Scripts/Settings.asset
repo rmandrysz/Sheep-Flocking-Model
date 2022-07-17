@@ -26,13 +26,13 @@ MonoBehaviour:
   flockCenteringWeight: 0.2
   velocityMatchingWeight: 0.2
   obstacleAvoidanceWeight: 0.5
-  escapeWeight: 0.7
+  escapeWeight: 1.49
   flockmateAvoidanceRadius: 3
   flockmateAvoidanceSoftener: 0.8
   flockmateDetectionRadius: 5
   sightAngle: 100
-  flightZoneRadius: 50
-  adjustedFlockmateAvoidanceWeight: 1.8
-  adjustedFlockCenteringWeight: 0.4
-  adjustedVelocityMatchingWeight: 0.4
+  flightZoneRadius: 35
+  adjustedFlockmateAvoidanceWeight: 1.45
+  adjustedFlockCenteringWeight: 0.8
+  adjustedVelocityMatchingWeight: 0.2
   rotationSpeed: 4
