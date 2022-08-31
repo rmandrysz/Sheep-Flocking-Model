@@ -45,9 +45,12 @@ public class Manager : MonoBehaviour
         {
             float x = Random.Range(-spawnRadius, spawnRadius);
             float y = Random.Range(-spawnRadius, spawnRadius);
-            Vector2 position = new Vector3(x, y);
+            Vector2 position = new Vector2(x, y);
 
-            localAgents.Add(GameObject.Instantiate(agentPrefab, position, Quaternion.identity, transform).GetComponent<Agent>());
+            localAgents.Add(
+                GameObject.Instantiate(
+                    agentPrefab, position, Quaternion.identity, transform).GetComponent<Agent>());
+                    
             if (predator)
             {
                 localAgents[i].predator = predator;

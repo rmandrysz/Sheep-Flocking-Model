@@ -59,16 +59,9 @@ public class Agent : MonoBehaviour
     {
         transform.Translate(direction * dt, Space.World);
 
-        if (direction.sqrMagnitude < 0.01f)
-        {
-            previousDirection = direction;
-            direction = Vector3.zero;
-            return;
-        }
-
         if (direction.sqrMagnitude != 0f)
         {
-            RotateInMoveDirectionSmooth();
+            RotateInMoveDirectionSmooth(dt);
         }
 
         previousDirection = direction;
@@ -228,12 +221,12 @@ public class Agent : MonoBehaviour
         transform.rotation = rotation;
     }
 
-    private void RotateInMoveDirectionSmooth()
+    private void RotateInMoveDirectionSmooth(float dt)
     {
-        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction.normalized);
+        targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, settings.maxRotationDegrees * dt);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * settings.rotationSpeed);
+        transform.rotation = targetRotation;
     }
 
     public Vector3 GetDirection()

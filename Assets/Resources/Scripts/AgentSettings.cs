@@ -40,5 +40,5 @@ public class AgentSettings : ScriptableObject
     public float adjustedVelocityMatchingWeight = 0.5f;
 
     [Header ("Visuals")]
-    public float rotationSpeed = 1f;
+    public float maxRotationDegrees = 1f;
 }
