@@ -17,7 +17,7 @@ public class Agent : MonoBehaviour
 
     private float minSpeed;
     private float maxSpeed;
-    private Vector3 previousDirection;
+    public Vector3 previousDirection;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
     [Header ("References")]

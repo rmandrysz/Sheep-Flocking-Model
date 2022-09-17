@@ -157,6 +157,7 @@ MonoBehaviour:
   predatorPrefab: {fileID: 3599853321251493274, guid: 5740851fb676242438691f6cb08a57c5, type: 3}
   predator: {fileID: 0}
   agentPrefab: {fileID: 6951958027865408579, guid: 2334da2a96e704d439d1e519c261ea26, type: 3}
+  saveToFile: 0
 --- !u!4 &293902961
 Transform:
   m_ObjectHideFlags: 0

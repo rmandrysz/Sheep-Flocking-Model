@@ -8,7 +8,12 @@ public class Predator : MonoBehaviour
     public float speed = 4f;
     public bool debug = false;
 
-    private void Update() 
+    public void PredatorUpdate(float dt) 
+    {
+        Move(dt);
+    }
+
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -25,8 +30,6 @@ public class Predator : MonoBehaviour
             targetPosition.z = 0;
             TeleportToTargetPosition();
         }
-
-        Move(Time.deltaTime);
     }
 
     private void Move(float dt)
@@ -51,8 +54,8 @@ public class Predator : MonoBehaviour
     {
         var relativePos = nextPosition - transform.position;
 
-        var angle = Mathf.Atan2(relativePos.y, relativePos.x) * Mathf.Rad2Deg - 90f;
-        var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, relativePos.normalized);
+
+        transform.rotation = targetRotation;
     }
 }

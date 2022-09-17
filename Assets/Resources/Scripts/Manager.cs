@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class Manager : MonoBehaviour
 {
@@ -9,14 +10,19 @@ public class Manager : MonoBehaviour
 
     List<Agent> agents;
     public GameObject predatorPrefab;
-    public Transform predator;
+    public Predator predator;
 
     [SerializeField]
     private GameObject agentPrefab;
     private AgentSettings settings;
 
+    [SerializeField]
+    private bool saveToFile;
+    private List<Vector3> data;
+
     private void Start()
     {
+        data = new List<Vector3>();
         agents = Spawn();
         settings = agents[0].settings;
     }
@@ -25,6 +31,10 @@ public class Manager : MonoBehaviour
     {
         Calculate();
         AgentUpdate(Time.fixedDeltaTime);
+        if (predator)
+        {
+            predator.PredatorUpdate(Time.fixedDeltaTime);
+        }
     }
     
     private void Update() {
@@ -34,7 +44,10 @@ public class Manager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.D) && predator)
         {
-            DespawnPredator();
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                DespawnPredator();
+            }
         }
     }
 
@@ -53,7 +66,7 @@ public class Manager : MonoBehaviour
                     
             if (predator)
             {
-                localAgents[i].predator = predator;
+                localAgents[i].predator = predator.transform;
             }
         }
 
@@ -101,6 +114,14 @@ public class Manager : MonoBehaviour
                     }
                 }
             }
+
+            if (predator && agent.averageFlockCenter != Vector3.zero)
+            {
+                float predatorDistance = (predator.transform.position - agent.transform.position).magnitude;
+                float centerDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
+                Vector4 state = new Vector3(agent.previousDirection.magnitude, predatorDistance, centerDistance);
+                data.Add(state);
+            }
         }
     }
 
@@ -117,15 +138,45 @@ public class Manager : MonoBehaviour
         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         targetPosition.z = 0;
 
-        predator = GameObject.Instantiate(predatorPrefab, targetPosition, Quaternion.identity).transform;
+        predator = GameObject.Instantiate(predatorPrefab, targetPosition, Quaternion.identity).GetComponent<Predator>();
         foreach(var agent in agents)
         {
-            agent.predator = predator;
+            agent.predator = predator.transform;
         }
     }
 
     private void DespawnPredator()
     {
         Destroy(predator.gameObject);
+    }
+
+    private void OnApplicationQuit() {
+        if(saveToFile)
+        {
+            SaveData();
+        }
+    }
+
+    private void SaveData()
+    {
+        int dataNumber = 0;
+        string path = Application.dataPath + "/Data/Data" + dataNumber + ".txt";
+
+        while(File.Exists(path))
+        {
+            ++dataNumber;
+            path = Application.dataPath + "/Data/Data" + dataNumber + ".txt";
+        }
+
+        foreach ( Vector3 point in data )
+        {
+            string pointData = (
+            point.x 
+            + "\t" + point.y 
+            + "\t" + point.z
+            + "\n"
+            );
+            File.AppendAllText(path, pointData);
+        } 
     }
 }
