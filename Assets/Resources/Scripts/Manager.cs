@@ -104,7 +104,7 @@ public class Manager : MonoBehaviour
             foreach(var obstacle in obstacles)
             {
                 Vector3 offset = agent.transform.position - obstacle.position;
-                agent.AddNewObstacleAvoidance(offset);
+                agent.AddObstacleAvoidance(offset);
             }
 
             for (int j = 0; j < agentNumber; j++)

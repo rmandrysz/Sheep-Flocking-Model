@@ -36,7 +36,6 @@ public class Agent : MonoBehaviour
     public void AgentUpdate(float dt)
     {
         AdjustSpeedLimits();          
-        // AvoidWalls();
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
         MatchVelocity();
@@ -143,32 +142,7 @@ public class Agent : MonoBehaviour
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }
 
-    private void AvoidWalls()
-    {
-        RaycastHit2D raycastHit;
-
-        foreach (var angle in AngleCalculator.detectionAngles)
-        {
-            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * previousDirection.normalized;
-            raycastHit = Physics2D.CircleCast(transform.position, settings.circleCastRadius, dir, settings.collisionAvoidDistance, settings.obstacleLayer);
-
-            Color debugColor = Color.white;
-
-            if(raycastHit)
-            {
-                float modifier = InvSquare(raycastHit.distance, 3);
-                RequestDirection(settings.obstacleAvoidanceWeight * modifier * -dir, "Reduce Velocity");
-                debugColor = Color.red;
-            }
-
-            if (debug)
-            {
-                Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, debugColor);
-            }
-        }
-    }
-
-    public void AddNewObstacleAvoidance(Vector3 offset)
+    public void AddObstacleAvoidance(Vector3 offset)
     {
         float distance = offset.magnitude;
         Vector3 avoidance = offset.normalized * InvSquare(distance, 15);

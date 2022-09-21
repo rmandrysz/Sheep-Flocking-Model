@@ -10,11 +10,8 @@ public class AgentSettings : ScriptableObject
     public float initialMaxSpeed = 10f;
     public float finalMaxSpeed = 15f;
 
-    [Header ("Collision Avoidance")]
-    public float collisionAvoidDistance = 20f;
-    public float circleCastRadius = 0.3f;
-    public LayerMask obstacleLayer;
-    public float coneOfSightAngle = 10f;
+    [Header ("Obstacle Avoidance")]
+    public float obstacleAvoidSoftener = 15f;
 
     [Header ("Weights")]
     public float flockmateAvoidanceWeight = 1f;
