@@ -16,7 +16,7 @@ MonoBehaviour:
   finalMinSpeed: 2
   initialMaxSpeed: 7
   finalMaxSpeed: 13
-  collisionAvoidDistance: 5
+  collisionAvoidDistance: 7
   circleCastRadius: 0.1
   obstacleLayer:
     serializedVersion: 2
@@ -35,4 +35,4 @@ MonoBehaviour:
   adjustedFlockmateAvoidanceWeight: 1.45
   adjustedFlockCenteringWeight: 0.6
   adjustedVelocityMatchingWeight: 0.2
-  maxRotationDegrees: 143.44
+  maxRotationDegrees: 150

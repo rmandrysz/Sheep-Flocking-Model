@@ -36,7 +36,7 @@ public class Agent : MonoBehaviour
     public void AgentUpdate(float dt)
     {
         AdjustSpeedLimits();          
-        AvoidWalls();
+        // AvoidWalls();
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
         MatchVelocity();
@@ -166,6 +166,13 @@ public class Agent : MonoBehaviour
                 Debug.DrawRay(transform.position, dir.normalized * settings.collisionAvoidDistance, debugColor);
             }
         }
+    }
+
+    public void AddNewObstacleAvoidance(Vector3 offset)
+    {
+        float distance = offset.magnitude;
+        Vector3 avoidance = offset.normalized * InvSquare(distance, 15);
+        RequestDirection(avoidance * settings.obstacleAvoidanceWeight, "Avoid Obstacle");
     }
 
     private void EscapeFromPredator()
