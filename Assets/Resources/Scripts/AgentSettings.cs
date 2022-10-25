@@ -19,6 +19,7 @@ public class AgentSettings : ScriptableObject
     public float velocityMatchingWeight = 1f;
     public float obstacleAvoidanceWeight = 2f;
     public float escapeWeight = 0.7f;
+    public float adjustedFlockmateAvoidanceWeight = 0.2f;
 
     [Header ("Flockmate Avoidance")]
     public float flockmateAvoidanceRadius = 3f;
@@ -30,11 +31,6 @@ public class AgentSettings : ScriptableObject
 
     [Header ("Predator Adaptation")]
     public float flightZoneRadius = 50f;
-
-    [Header ("Adjusted Weights")]
-    public float adjustedFlockmateAvoidanceWeight = 0.2f;
-    public float adjustedFlockCenteringWeight = 0.8f;
-    public float adjustedVelocityMatchingWeight = 0.5f;
 
     [Header ("Visuals")]
     public float maxRotationDegrees = 1f;

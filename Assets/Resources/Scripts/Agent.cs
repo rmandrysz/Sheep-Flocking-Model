@@ -112,8 +112,7 @@ public class Agent : MonoBehaviour
         {
             return;
         }
-        float diff = settings.adjustedVelocityMatchingWeight - settings.velocityMatchingWeight;
-        float weight = PredatorSmoothStep() * settings.adjustedVelocityMatchingWeight;
+        float weight = PredatorSmoothStep() * settings.velocityMatchingWeight;
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
@@ -136,8 +135,7 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        float diff = settings.adjustedFlockCenteringWeight - settings.flockCenteringWeight;
-        float weight = PredatorSmoothStep() * settings.adjustedFlockCenteringWeight;
+        float weight = PredatorSmoothStep() * settings.flockCenteringWeight;
         averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }

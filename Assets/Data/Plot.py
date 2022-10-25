@@ -4,7 +4,7 @@ import numpy as np
 import statistics as stat
 from scipy.interpolate import make_interp_spline
 
-dataSet = 0
+dataSet = 4
 here = os.path.dirname(os.path.abspath(__file__))
 dataPath = os.path.join(here, "Files\Data" + str(dataSet) + ".txt")
 referencePath = os.path.join(here, "Reference\Trial3Data.txt")
@@ -80,13 +80,14 @@ plt.plot(referenceX, referenceY, 'g-+', label="reference")
 plt.xlabel("Distance from predator")
 plt.ylabel("Distance from the flock center")
 plt.xlim(max(xdata), min(xdata))
+plt.grid(True)
 # plt.title("Change in the number of healthy, sick and recovered agents over time\nwith probability of contraction p={} and recovery p={}".format(spreadChance, recoveryChance))
 plt.legend()
 
 plt.subplot(1, 2, 2)
 plt.plot(xdataDivided, averagesDivided, 'c-*')
 plt.plot(referenceXdivided, referenceYdivided, 'g-+')
-# plt.grid(True)
+plt.grid(True)
 # plt.xticks(range(0, max(velocity) + 26, 25))
 # plt.yticks(range(0, predatorDistance[0] + 1, 50))
 plt.show()

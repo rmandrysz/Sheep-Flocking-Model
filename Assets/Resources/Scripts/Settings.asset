@@ -16,18 +16,17 @@ MonoBehaviour:
   finalMinSpeed: 2
   initialMaxSpeed: 7
   finalMaxSpeed: 13
-  obstacleAvoidDistance: 25
   obstacleAvoidSoftener: 15
   flockmateAvoidanceWeight: 0.9
-  flockCenteringWeight: 0.2
-  velocityMatchingWeight: 0.1
-  obstacleAvoidanceWeight: 0.5
+  flockCenteringWeight: 0.6
+  velocityMatchingWeight: 0.2
+  obstacleAvoidanceWeight: 0.2
   escapeWeight: 2
   flockmateAvoidanceRadius: 3
   flockmateAvoidanceSoftener: 0.8
   flockmateDetectionRadius: 5
   sightAngle: 100
-  flightZoneRadius: 40.01
+  flightZoneRadius: 60
   adjustedFlockmateAvoidanceWeight: 1.45
   adjustedFlockCenteringWeight: 0.6
   adjustedVelocityMatchingWeight: 0.2
