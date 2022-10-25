@@ -182,12 +182,12 @@ public class Manager : MonoBehaviour
     private void SaveData()
     {
         int dataNumber = 0;
-        string path = Application.dataPath + "/Data/Data" + dataNumber + ".txt";
+        string path = Application.dataPath + "/Data/Files/Data" + dataNumber + ".txt";
 
         while(File.Exists(path))
         {
             ++dataNumber;
-            path = Application.dataPath + "/Data/Data" + dataNumber + ".txt";
+            path = Application.dataPath + "/Data/Files/Data" + dataNumber + ".txt";
         }
 
         foreach ( Vector3 point in data )
