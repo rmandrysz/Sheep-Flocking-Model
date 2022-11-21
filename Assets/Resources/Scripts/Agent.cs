@@ -50,7 +50,7 @@ public class Agent : MonoBehaviour
         if (predator && debug)
         {
             float distance = (predator.position - transform.position).magnitude;
-            Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
+            // Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
         }
     }
 
@@ -124,10 +124,12 @@ public class Agent : MonoBehaviour
             return;
         }
 
+        averageFlockCenter /= numFlockmates;
+        
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
-            // Debug.Log("Average Flock Center: " + averageFlockCenter);
+            Debug.Log("Average Flock Center: " + averageFlockCenter.magnitude);
         }
 
         if (!predator)
@@ -136,7 +138,6 @@ public class Agent : MonoBehaviour
         }
 
         float weight = PredatorSmoothStep() * settings.flockCenteringWeight;
-        averageFlockCenter /= numFlockmates;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }
 

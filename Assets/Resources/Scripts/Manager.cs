@@ -29,11 +29,18 @@ public class Manager : MonoBehaviour
     public float wallSegmentSize;
     public GameObject wallSegmentPrefab;
 
+    private int skipFrame = 0;
+
+    private void Awake()
+    {
+        // Application.targetFrameRate = 60;
+        agents = Spawn();
+    }
+
     private void Start()
     {
         data = new List<Vector3>();
         obstacles = new List<Transform>();
-        agents = Spawn();
         settings = agents[0].settings;
         foreach(Transform wall in playground)
         {
@@ -63,6 +70,31 @@ public class Manager : MonoBehaviour
             {
                 DespawnPredator();
             }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Speed up to 2");
+            Time.timeScale = 2f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Speed up to 1");
+            Time.timeScale = 1f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Speed up to 3");
+            Time.timeScale = 3f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.Log("Speed up to 4");
+            Time.timeScale = 4f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            Debug.Log("Speed up to 5");
+            Time.timeScale = 5f;
         }
     }
 
@@ -118,8 +150,13 @@ public class Manager : MonoBehaviour
                 Vector3 offset = neighbor.transform.position - agent.transform.position;
                 float sqrDist = Vector3.SqrMagnitude(offset);
 
-                if (sqrDist <= detectionRadius * detectionRadius && Vector3.Angle(agent.GetDirection(), offset) < settings.sightAngle)
+                if (sqrDist <= detectionRadius * detectionRadius && Vector2.Angle(offset, agent.previousDirection) < settings.sightAngle)
                 {
+                    if (i == 0)
+                    {
+                        // Debug.DrawRay(agent.transform.position, offset, Color.magenta);
+                        Debug.DrawRay(agent.transform.position, agent.previousDirection.normalized * 3, Color.blue);
+                    }
                     Color color = new Color(0f, 255f, 0f);
                     ++agent.numFlockmates;
                     agent.averageFlockmateVelocity += neighbor.GetDirection();
@@ -137,7 +174,7 @@ public class Manager : MonoBehaviour
                 }
             }
 
-            if (predator && agent.averageFlockCenter != Vector3.zero)
+            if (i == 0 && predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
             {
                 float predatorDistance = (predator.transform.position - agent.transform.position).magnitude;
                 float centerDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
@@ -145,6 +182,7 @@ public class Manager : MonoBehaviour
                 data.Add(state);
             }
         }
+        skipFrame = 1 - skipFrame;
     }
 
     private void AgentUpdate(float dt)
@@ -226,5 +264,21 @@ public class Manager : MonoBehaviour
             obstacles.Add(segment1);
             obstacles.Add(segment2);
         }
+    }
+
+    private void OnDrawGizmos() {
+        if(!predator)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(predator.transform.position, settings.flightZoneRadius); 
+    }
+
+    public static float AngleInRad(Vector3 vec1, Vector3 vec2) {
+        return Mathf.Atan2(vec1.y - vec2.y, vec1.x - vec2.x);
+    }
+
+    public static float AngleInDeg(Vector3 vec1, Vector3 vec2) {
+        return AngleInRad(vec1, vec2) * 180 / Mathf.PI;
     }
 }

@@ -185,15 +185,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentNumber: 46
-  spawnRadius: 20
+  spawnRadius: 5
   predatorPrefab: {fileID: 3599853321251493274, guid: 5740851fb676242438691f6cb08a57c5, type: 3}
   predator: {fileID: 0}
   agentPrefab: {fileID: 6951958027865408579, guid: 2334da2a96e704d439d1e519c261ea26, type: 3}
   playground: {fileID: 118671923}
   obstacles: []
   saveToFile: 1
-  horizontalWallOffset: 47
-  verticalWallOffset: 27.5
+  horizontalWallOffset: 73.5
+  verticalWallOffset: 42.5
   wallSegmentSize: 5
   wallSegmentPrefab: {fileID: 8405718670366725873, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
 --- !u!4 &1387258924
@@ -298,7 +298,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 40
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -342,11 +342,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8405718670366725872, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -47
+      value: -73.6
       objectReference: {fileID: 0}
     - target: {fileID: 8405718670366725872, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 27.5
+      value: 42.49
       objectReference: {fileID: 0}
     - target: {fileID: 8405718670366725872, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
       propertyPath: m_LocalPosition.z
