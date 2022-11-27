@@ -2,15 +2,15 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 import statistics as stat
-from scipy.interpolate import make_interp_spline
+import scipy as sp
 
-dataSet = 33
+dataSet = 19
 here = os.path.dirname(os.path.abspath(__file__))
 dataPath = os.path.join(here, "Files\Data" + str(dataSet) + ".txt")
 referencePath = os.path.join(here, "Reference\Trial3Data.txt")
 
 groupingSize = 1
-startingPoint = 19
+startingPoint = 80
 
 print(dataPath)
 print(referencePath)
@@ -23,11 +23,15 @@ referenceLines = [line for line in referenceFile.readlines()]
 grouped = {}
 xdata = []
 averages = []
+standardDeviation = []
+standardError = []
 referenceX = []
 referenceY = []
 
 xdataDivided = []
 averagesDivided = []
+standardDeviatonDiv = []
+standardErrorDiv = []
 referenceXdivided = []
 referenceYdivided = []
 
@@ -42,6 +46,11 @@ for line in lines:
 
     key = float(str(predatorDistance).split('.')[0]) // groupingSize
     value = centerDistance
+
+    if startingPoint != 0 and key > startingPoint:
+        print("Starting point: {}, key: {}".format(startingPoint, key))
+        continue
+
     if key in grouped:
         grouped[key].append(value)
     else:
@@ -60,17 +69,18 @@ for line in referenceLines:
 
 # Count Averages
 for group in sortedGrouped.keys():
-    average = stat.median(grouped[group])
+    standardDeviation.append(stat.stdev(grouped[group]))
+    standardError.append(np.std(grouped[group]) / np.sqrt(np.size(grouped[group])))
+    average = stat.mean(grouped[group])
     averages.append(average)
-
 
 # Plot model data
 xdata = [float(x)*groupingSize for x in sortedGrouped.keys()]
 
-averagesMin = min(averages[startingPoint:])
-averagesDivided = [x/averagesMin for x in averages[startingPoint:]]
-xdataPoint = 38.0
-xdataDivided = [x/xdataPoint for x in xdata[startingPoint:]]
+averagesMin = min(averages)
+averagesDivided = [x/averagesMin for x in averages]
+xdataPoint = 45.0
+xdataDivided = [x/xdataPoint for x in xdata]
 
 referenceMin = min(referenceY)
 referenceYdivided = [x/referenceMin for x in referenceY]
@@ -78,10 +88,10 @@ referencePoint = 60.0
 referenceXdivided = [x/referencePoint for x in referenceX]
 
 plt.subplot(1, 2, 1)
-plt.plot(xdata[startingPoint:], averages[startingPoint:], 'c-*', label="Distance from flock center")
+plt.errorbar(xdata, averages, yerr=standardError, fmt='-o', color='cyan', ecolor='gray', label="Distance from flock center")
 plt.plot(referenceX, referenceY, 'g-+', label="reference")
-plt.xlabel("Distance from predator")
-plt.ylabel("Distance from the flock center")
+plt.xlabel("Odległość Drapieżnika od centroidu stada")
+plt.ylabel("Średnia odległość ")
 plt.xlim(max([max(xdata), max(referenceX)]), min([min(xdata), min(referenceX)]))
 plt.grid(True)
 # plt.title("Change in the number of healthy, sick and recovered agents over time\nwith probability of contraction p={} and recovery p={}".format(spreadChance, recoveryChance))

@@ -129,7 +129,7 @@ public class Agent : MonoBehaviour
         if(debug)
         {
             Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
-            Debug.Log("Average Flock Center: " + averageFlockCenter.magnitude);
+            // Debug.Log("Average Flock Center: " + averageFlockCenter.magnitude);
         }
 
         if (!predator)
@@ -164,8 +164,10 @@ public class Agent : MonoBehaviour
 
     private void AdjustSpeedLimits()
     {
-        var diff = settings.finalMaxSpeed - settings.initialMaxSpeed;
-        maxSpeed = settings.initialMaxSpeed + (diff * PredatorSmoothStep());  
+        var diffMax = settings.finalMaxSpeed - settings.initialMaxSpeed;
+        maxSpeed = settings.initialMaxSpeed + (diffMax * PredatorSmoothStep());
+        var diffMin = settings.finalMinSpeed - settings.initialMinSpeed;
+        minSpeed = settings.initialMinSpeed + (diffMin * PredatorSmoothStep());
     }
 
     private void UpdateDirection()
@@ -175,14 +177,21 @@ public class Agent : MonoBehaviour
             direction += request.direction * request.magnitude;
             if(debug)
             {
-                Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
+                // Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
             }
         }
 
         direction = Vector3.ClampMagnitude(direction, maxSpeed);
         if (direction.sqrMagnitude < (minSpeed * minSpeed))
         {
-            direction = direction.normalized * minSpeed;
+            if(!predator)
+            {
+                direction = Vector3.zero;
+            }
+            else
+            {
+                // direction = direction.normalized * minSpeed;
+            }
         }
     }
 

@@ -71,6 +71,11 @@ public class Manager : MonoBehaviour
                 DespawnPredator();
             }
         }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            Debug.Log("Speed up to 0.5");
+            Time.timeScale = 0.5f;
+        }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("Speed up to 2");
@@ -106,10 +111,11 @@ public class Manager : MonoBehaviour
             float x = Random.Range(-spawnRadius, spawnRadius);
             float y = Random.Range(-spawnRadius, spawnRadius);
             Vector2 position = new Vector2(x, y);
+            Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(-180f, 180f));
 
             localAgents.Add(
                 GameObject.Instantiate(
-                    agentPrefab, position, Quaternion.identity, transform).GetComponent<Agent>());
+                    agentPrefab, position, rotation, transform).GetComponent<Agent>());
                     
             if (predator)
             {
@@ -174,11 +180,12 @@ public class Manager : MonoBehaviour
                 }
             }
 
-            if (i == 0 && predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
+            if (predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
             {
-                float predatorDistance = (predator.transform.position - agent.transform.position).magnitude;
+                float oldPredatorDistance = (predator.transform.position - agent.transform.position).magnitude;
                 float centerDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
-                Vector4 state = new Vector3(agent.previousDirection.magnitude, predatorDistance, centerDistance);
+                float newPredatorDistance = (predator.transform.position - (agent.averageFlockCenter / agent.numFlockmates)).magnitude;
+                Vector4 state = new Vector3(agent.previousDirection.magnitude, newPredatorDistance, centerDistance);
                 data.Add(state);
             }
         }
