@@ -158,11 +158,6 @@ public class Manager : MonoBehaviour
 
                 if (sqrDist <= detectionRadius * detectionRadius && Vector2.Angle(offset, agent.previousDirection) < settings.sightAngle)
                 {
-                    if (i == 0)
-                    {
-                        // Debug.DrawRay(agent.transform.position, offset, Color.magenta);
-                        Debug.DrawRay(agent.transform.position, agent.previousDirection.normalized * 3, Color.blue);
-                    }
                     Color color = new Color(0f, 255f, 0f);
                     ++agent.numFlockmates;
                     agent.averageFlockmateVelocity += neighbor.GetDirection();

@@ -17,6 +17,7 @@ public class Agent : MonoBehaviour
 
     private float minSpeed;
     private float maxSpeed;
+    private float averageSpeed;
     public Vector3 previousDirection;
     private List<(string name, float magnitude, Vector3 direction)> accumulator;
 
@@ -39,19 +40,19 @@ public class Agent : MonoBehaviour
         MoveToFlockCenter();
         AvoidFlockmateCollisions();
         MatchVelocity();
-        if (predator)
-        {
-            EscapeFromPredator();
-        }
+        // if (predator)
+        // {
+        //     EscapeFromPredator();
+        // }
 
         UpdateDirection();
         Move(dt);
 
-        if (predator && debug)
-        {
-            float distance = (predator.position - transform.position).magnitude;
-            // Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
-        }
+        // if (predator && debug)
+        // {
+        //     float distance = (predator.position - transform.position).magnitude;
+        //     // Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
+        // }
     }
 
     private void Move(float dt)
@@ -64,17 +65,17 @@ public class Agent : MonoBehaviour
         }
 
         previousDirection = direction;
-        direction = Vector3.zero;
+        direction = direction.normalized * averageSpeed;
     }
 
     private void AvoidFlockmateCollisions()
     {
         float weight = settings.flockmateAvoidanceWeight;
-        if (predator)
-        {
-            float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
-            weight += PredatorSmoothStep() * diff;
-        }
+        // if (predator)
+        // {
+        //     float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
+        //     weight += PredatorSmoothStep() * diff;
+        // }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
 
@@ -108,11 +109,11 @@ public class Agent : MonoBehaviour
             Debug.DrawRay(transform.position, averageFlockmateVelocity, Color.blue);
         }
 
-        if (!predator)
-        {
-            return;
-        }
-        float weight = PredatorSmoothStep() * settings.velocityMatchingWeight;
+        // if (!predator)
+        // {
+        //     return;
+        // }
+        float weight = settings.velocityMatchingWeight;
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
@@ -132,12 +133,12 @@ public class Agent : MonoBehaviour
             // Debug.Log("Average Flock Center: " + averageFlockCenter.magnitude);
         }
 
-        if (!predator)
-        {
-            return;
-        }
+        // if (!predator)
+        // {
+        //     return;
+        // }
 
-        float weight = PredatorSmoothStep() * settings.flockCenteringWeight;
+        float weight = settings.flockCenteringWeight;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }
 
@@ -168,6 +169,7 @@ public class Agent : MonoBehaviour
         maxSpeed = settings.initialMaxSpeed + (diffMax * PredatorSmoothStep());
         var diffMin = settings.finalMinSpeed - settings.initialMinSpeed;
         minSpeed = settings.initialMinSpeed + (diffMin * PredatorSmoothStep());
+        averageSpeed = (minSpeed + maxSpeed) / 2f;
     }
 
     private void UpdateDirection()
@@ -177,22 +179,22 @@ public class Agent : MonoBehaviour
             direction += request.direction * request.magnitude;
             if(debug)
             {
-                // Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
+                Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
             }
         }
 
         direction = Vector3.ClampMagnitude(direction, maxSpeed);
-        if (direction.sqrMagnitude < (minSpeed * minSpeed))
-        {
-            if(!predator)
-            {
-                direction = Vector3.zero;
-            }
-            else
-            {
-                // direction = direction.normalized * minSpeed;
-            }
-        }
+        // if (direction.sqrMagnitude < (minSpeed * minSpeed))
+        // {
+        //     if(!predator)
+        //     {
+        //         direction = Vector3.zero;
+        //     }
+        //     else
+        //     {
+        //         // direction = direction.normalized * minSpeed;
+        //     }
+        // }
     }
 
     public void ResetAccumulators()
@@ -244,6 +246,7 @@ public class Agent : MonoBehaviour
 
     private float PredatorSmoothStep(float min = 0f, float max = 3f)
     {
+        return 1f;
         if (!predator)
         {
             return min;
