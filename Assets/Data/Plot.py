@@ -5,7 +5,7 @@ import statistics as stat
 import scipy as sp
 from matplotlib.ticker import MultipleLocator
 
-dataSet = 19
+dataSet = "Official"
 here = os.path.dirname(os.path.abspath(__file__))
 dataPath = os.path.join(here, "Files\Data" + str(dataSet) + ".txt")
 referencePath = os.path.join(here, "Reference\Trial3Data.txt")
