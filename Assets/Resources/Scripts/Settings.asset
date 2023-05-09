@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5509add2f0a1d94e94c959ae013c851, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  initialMinSpeed: 1.5
-  finalMinSpeed: 2.5
-  initialMaxSpeed: 9
-  finalMaxSpeed: 13
+  initialMinSpeed: 0.7
+  finalMinSpeed: 0.7
+  initialMaxSpeed: 8
+  finalMaxSpeed: 12
   obstacleAvoidSoftener: 15
   flockmateAvoidanceWeight: 0.9
   flockCenteringWeight: 0.45
   velocityMatchingWeight: 0.2
-  obstacleAvoidanceWeight: 0.5
-  escapeWeight: 5
+  obstacleAvoidanceWeight: 0.75
+  escapeWeight: 4
   adjustedFlockmateAvoidanceWeight: 1.45
   flockmateAvoidanceRadius: 4
   flockmateAvoidanceSoftener: 0.6
   flockmateDetectionRadius: 6
   sightAngle: 150
   flightZoneRadius: 60
-  maxRotationDegrees: 100
+  maxRotationDegrees: 130

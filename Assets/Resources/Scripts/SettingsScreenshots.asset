@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: SettingsScreenshots
   m_EditorClassIdentifier: 
   initialMinSpeed: 0.3
-  finalMinSpeed: 2.5
+  finalMinSpeed: 0.3
   initialMaxSpeed: 9
-  finalMaxSpeed: 13
+  finalMaxSpeed: 12
   obstacleAvoidSoftener: 15
-  flockmateAvoidanceWeight: 10.32
-  flockCenteringWeight: 0.8
+  flockmateAvoidanceWeight: 10
+  flockCenteringWeight: 0.6
   velocityMatchingWeight: 0.1
-  obstacleAvoidanceWeight: 0.5
+  obstacleAvoidanceWeight: 0.75
   escapeWeight: 5
   adjustedFlockmateAvoidanceWeight: 15
   flockmateAvoidanceRadius: 6
   flockmateAvoidanceSoftener: 0.6
   flockmateDetectionRadius: 11
-  sightAngle: 130
+  sightAngle: 150
   flightZoneRadius: 60
   maxRotationDegrees: 100

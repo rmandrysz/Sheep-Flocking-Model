@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ScreenshotTaker : MonoBehaviour {
+    public bool record = false;
     public int resWidth = 2550; 
     public int resHeight = 3300;
     private int screenshotCount = 0;
@@ -15,7 +16,11 @@ public class ScreenshotTaker : MonoBehaviour {
     }
 
     void LateUpdate() {
-    Camera camera = Camera.main;
+        if(!record)
+        {
+            return;
+        }
+        Camera camera = Camera.main;
         if (Input.GetKeyDown("k")) 
         {
             screenshotCount = 6;
