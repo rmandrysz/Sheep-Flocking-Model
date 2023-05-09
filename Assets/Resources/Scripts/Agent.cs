@@ -151,7 +151,7 @@ public class Agent : MonoBehaviour
     private void EscapeFromPredator()
     {
         var offset = transform.position - predator.position;
-        var escapeDirection = Vector3.Normalize(offset) * PredatorSmoothStep() * settings.escapeWeight;
+        var escapeDirection = PredatorSmoothStep() * settings.escapeWeight * Vector3.Normalize(offset);
         // escapeDirection *= InvSquare(offset.magnitude, 10f);
 
         RequestDirection(escapeDirection, "Escape From Predator!");

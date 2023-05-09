@@ -253,8 +253,8 @@ public class Manager : MonoBehaviour
 
         for( float i = -verticalWallOffset; i <= verticalWallOffset; i += wallSegmentSize )
         {
-            Vector3 position1 = new Vector3(-horizontalWallOffset, i, 0f);
-            Vector3 position2 = new Vector3(horizontalWallOffset, i, 0f);
+            Vector3 position1 = new(-horizontalWallOffset, i, 0f);
+            Vector3 position2 = new(horizontalWallOffset, i, 0f);
             Transform segment1 = GameObject.Instantiate(wallSegmentPrefab, position1, Quaternion.identity, playground).transform;
             Transform segment2 = GameObject.Instantiate(wallSegmentPrefab, position2, Quaternion.identity, playground).transform;
 
@@ -263,8 +263,8 @@ public class Manager : MonoBehaviour
         }
         for( float i = -horizontalWallOffset; i <= horizontalWallOffset; i += wallSegmentSize )
         {
-            Vector3 position1 = new Vector3(i, -verticalWallOffset, 0f);
-            Vector3 position2 = new Vector3(i, verticalWallOffset, 0f);
+            Vector3 position1 = new(i, -verticalWallOffset, 0f);
+            Vector3 position2 = new(i, verticalWallOffset, 0f);
             Transform segment1 = GameObject.Instantiate(wallSegmentPrefab, position1, Quaternion.identity, playground).transform;
             Transform segment2 = GameObject.Instantiate(wallSegmentPrefab, position2, Quaternion.identity, playground).transform;
 
