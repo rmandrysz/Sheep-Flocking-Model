@@ -23,6 +23,9 @@ public class Manager : MonoBehaviour
     private bool saveToFile;
     private List<Vector3> data;
 
+    public bool listenForScreenshots = false;
+    private int screenshotCount = 0;
+
     [Header("WallGeneration")]
     public float horizontalWallOffset;
     public float verticalWallOffset;
@@ -103,6 +106,13 @@ public class Manager : MonoBehaviour
         }
     }
 
+    private void LateUpdate() {
+        if(listenForScreenshots)
+        {
+            SaveDataForSvg();
+        }
+    }
+
     public List<Agent> Spawn()
     {
         List<Agent> localAgents = new List<Agent>();
@@ -163,7 +173,7 @@ public class Manager : MonoBehaviour
                         // Debug.DrawRay(agent.transform.position, offset, Color.magenta);
                         Debug.DrawRay(agent.transform.position, agent.previousDirection.normalized * 3, Color.blue);
                     }
-                    Color color = new Color(0f, 255f, 0f);
+                    Color color = new(0f, 255f, 0f);
                     ++agent.numFlockmates;
                     agent.averageFlockmateVelocity += neighbor.GetDirection();
                     agent.averageFlockCenter += neighbor.transform.position;
@@ -180,7 +190,7 @@ public class Manager : MonoBehaviour
                 }
             }
 
-            if (predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
+            if (saveToFile && predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
             {
                 float oldPredatorDistance = (predator.transform.position - agent.transform.position).magnitude;
                 float centerDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
@@ -237,14 +247,51 @@ public class Manager : MonoBehaviour
 
         foreach ( Vector3 point in data )
         {
-            string pointData = (
-            point.x 
-            + "\t" + point.y 
-            + "\t" + point.z
-            + "\n"
-            );
+            string pointData = point.x 
+                    + "\t" + point.y 
+                    + "\t" + point.z
+                    + "\n"
+            ;
             File.AppendAllText(path, pointData);
         } 
+    }
+
+    private void SaveDataForSvg()
+    {
+        if (Input.GetKeyDown(KeyCode.K)) 
+        {
+            screenshotCount = 6;
+        }
+        if (screenshotCount <= 0 | skipFrame == 0)
+        {
+            return;
+        }
+        string path = string.Format("{0}/Data/SVGScreenshots/screen_{1}.txt", 
+                            Application.dataPath, 
+                            screenshotCount);
+        foreach (var agent in agents)
+        {
+            Vector3 position = agent.transform.position;
+            Vector3 direction = agent.previousDirection;
+
+            string dataToSave = position.x + "\t" +
+                                position.y + "\t" +
+                                direction.x + "\t" +
+                                direction.y + "\n";
+            File.AppendAllText(path, dataToSave);
+        }
+        if(predator)
+        {
+            Vector3 predatorPosition = predator.transform.position;
+            Vector3 predatorDirection = predator.targetPosition - predatorPosition;
+            string dataToSave = predatorPosition.x + "\t" +
+                                predatorPosition.y + "\t" +
+                                predatorDirection.x + "\t" +
+                                predatorDirection.y + "\n";
+            File.AppendAllText(path, dataToSave);
+        }
+
+        --screenshotCount;
     }
 
     private void SpawnWalls()

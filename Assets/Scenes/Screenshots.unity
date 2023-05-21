@@ -316,6 +316,7 @@ MonoBehaviour:
   playground: {fileID: 118671923}
   obstacles: []
   saveToFile: 0
+  listenForScreenshots: 1
   horizontalWallOffset: 73.5
   verticalWallOffset: 42.5
   wallSegmentSize: 5
@@ -466,6 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37136c03d0411d44e820ca4cee78fe5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  record: 0
   resWidth: 3840
   resHeight: 2160
 --- !u!1001 &1915656301
