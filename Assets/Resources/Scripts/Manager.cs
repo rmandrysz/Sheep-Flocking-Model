@@ -56,6 +56,10 @@ public class Manager : MonoBehaviour
     {
         Calculate();
         AgentUpdate(Time.fixedDeltaTime);
+        if(listenForScreenshots)
+        {
+            SaveDataForSvg();
+        }
         if (predator)
         {
             predator.PredatorUpdate(Time.fixedDeltaTime);
@@ -104,23 +108,21 @@ public class Manager : MonoBehaviour
             Debug.Log("Speed up to 5");
             Time.timeScale = 5f;
         }
-    }
-
-    private void LateUpdate() {
-        if(listenForScreenshots)
+        if(Input.GetKeyDown(KeyCode.K))
         {
-            SaveDataForSvg();
+            Debug.Log("Here");
+            screenshotCount = 6;
         }
     }
 
     public List<Agent> Spawn()
     {
-        List<Agent> localAgents = new List<Agent>();
+        List<Agent> localAgents = new();
         for (int i = 0; i < agentNumber; ++i)
         {
             float x = Random.Range(-spawnRadius, spawnRadius);
             float y = Random.Range(-spawnRadius, spawnRadius);
-            Vector2 position = new Vector2(x, y);
+            Vector2 position = new(x, y);
             Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(-180f, 180f));
 
             localAgents.Add(
@@ -258,10 +260,6 @@ public class Manager : MonoBehaviour
 
     private void SaveDataForSvg()
     {
-        if (Input.GetKeyDown(KeyCode.K)) 
-        {
-            screenshotCount = 6;
-        }
         if (screenshotCount <= 0 | skipFrame == 0)
         {
             return;
@@ -272,22 +270,20 @@ public class Manager : MonoBehaviour
         foreach (var agent in agents)
         {
             Vector3 position = agent.transform.position;
-            Vector3 direction = agent.previousDirection;
+            Vector3 angle = agent.transform.rotation.eulerAngles;
 
             string dataToSave = position.x + "\t" +
                                 position.y + "\t" +
-                                direction.x + "\t" +
-                                direction.y + "\n";
+                                angle.z + "\n";
             File.AppendAllText(path, dataToSave);
         }
         if(predator)
         {
             Vector3 predatorPosition = predator.transform.position;
-            Vector3 predatorDirection = predator.targetPosition - predatorPosition;
+            Vector3 angle = predator.transform.rotation.eulerAngles;
             string dataToSave = predatorPosition.x + "\t" +
                                 predatorPosition.y + "\t" +
-                                predatorDirection.x + "\t" +
-                                predatorDirection.y + "\n";
+                                angle.z + "\n";
             File.AppendAllText(path, dataToSave);
         }
 

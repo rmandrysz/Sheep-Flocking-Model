@@ -1,36 +1,68 @@
 import svg
 import os
+import math
+import numpy as np
 
 class Sheep:
-    def __init__(self, values) -> None:
-        self.posX = values[0]
-        self.posY = values[1]
-        self.dirX = values[2]
-        self.dirY = values[3]
+    def __init__(self, posX, posY, angle) -> None:
+        self.posX = posX
+        self.posY = posY
+        self.angle = angle
 
-def calculateSheep(center, posx, posy):
+def calculateSheep(center, posx, posy, angle):
     x = center[0] + posx
     y = center[1] - posy
     return svg.Ellipse(
                 cx=x, cy=y,
-                rx=10, ry=13,
+                rx=5.5, ry=7,
                 stroke="black",
                 fill="transparent",
-                stroke_width=1),\
+                stroke_width=1,
+                transform=[svg.Rotate(angle, x, y)]),\
             svg.Ellipse(
-                cx=x, cy=y-10,
-                rx=5, ry=7,
+                cx=x, cy=y-6,
+                rx=3, ry=5,
                 stroke="black",
                 fill="black",
-                stroke_width=1)
-                # transform=[svg.Rotate(-50, 75, 75)])
+                stroke_width=1,
+                transform=[svg.Rotate(angle, x, y)])
 
-def drawSheep(data, sizeX, sizeY) -> svg.SVG:
+# def calculateAngle(data):
+#     result = math.atan2(data.dirY, data.dirX)
+#     print(result, np.rad2deg(result))
+#     # return np.rad2deg(result) - 90.0
+#     return result
+
+def draw(data, sizeX, sizeY) -> svg.SVG:
     center = (float(sizeX/2), float(sizeY/2))
+    predatorData = data[-1]
+    sheep = [calculateSheep(center, sheep.posX, sheep.posY, sheep.angle) for sheep in data[:-1]]
+    predator = calculatePredator(center, predatorData.posX, predatorData.posY, predatorData.angle)
     return svg.SVG(
-        width=sizeX,
-        height=sizeY,
-        elements=[calculateSheep(center, sheep.posX, sheep.posY) for sheep in data],
+        width = sizeX,
+        height = sizeY,
+        elements = [*sheep, predator]
+    )
+
+def calculatePredator(center, posx, posy, angle) -> svg.SVG:
+    offsetX = 8
+    offsetY = 10
+    posx = center[0] + posx
+    posy = center[1] - posy
+    lowerY = posy + offsetY
+    higherY = posy - offsetY
+    leftX = posx - offsetX
+    rightX = posx + offsetX
+    return svg.Polygon(
+        points = [
+            leftX, lowerY,
+            rightX, lowerY,
+            posx, higherY
+        ],
+        stroke = 'black',
+        stroke_width = 2,
+        fill = 'grey',
+        transform = [svg.Rotate(angle, posx, posy)]
     )
 
 def readFile(screenNumber):
@@ -46,8 +78,7 @@ def readFile(screenNumber):
     for line in lines:
         line = line.replace(",", ".")
         separated = [float(item) for item in line.split(sep="\t")]
-        separated = [item * 10 for item in separated]
-        result.append(Sheep(separated))
+        result.append(Sheep(10*separated[0], 10*separated[1], -separated[2]))
 
     dataFile.close()
     return result
@@ -61,6 +92,6 @@ def saveToFile(screenNumber, input):
 if __name__ == '__main__':
     screenNumber = 6
     sheep = readFile(screenNumber)
-    output = str(drawSheep(sheep, 1400.0, 800.0))
+    output = str(draw(sheep, 1000.0, 600.0))
     saveToFile(screenNumber, output)
     # print(drawSheep(sheep, 1400.0, 800.0))

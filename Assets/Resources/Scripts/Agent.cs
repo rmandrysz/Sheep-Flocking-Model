@@ -182,17 +182,17 @@ public class Agent : MonoBehaviour
         }
 
         direction = Vector3.ClampMagnitude(direction, maxSpeed);
-        if (direction.sqrMagnitude < (minSpeed * minSpeed))
-        {
-            // if(!predator)
-            // {
-                direction = Vector3.zero;
-            // }
-            // else
-            // {
-            //     // direction = direction.normalized * minSpeed;
-            // }
-        }
+        // if (direction.sqrMagnitude < (minSpeed * minSpeed))
+        // {
+        //     // if(!predator)
+        //     // {
+        //         direction = Vector3.zero;
+        //     // }
+        //     // else
+        //     // {
+        //     //     // direction = direction.normalized * minSpeed;
+        //     // }
+        // }
     }
 
     public void ResetAccumulators()
