@@ -90,8 +90,9 @@ def saveToFile(screenNumber, input):
         f.write(input)
 
 if __name__ == '__main__':
-    screenNumber = 6
-    sheep = readFile(screenNumber)
-    output = str(draw(sheep, 1000.0, 600.0))
-    saveToFile(screenNumber, output)
+    screenCount = 6
+    for number in range(screenCount):
+        sheep = readFile(number)
+        output = str(draw(sheep, 1200.0, 800.0))
+        saveToFile(number, output)
     # print(drawSheep(sheep, 1400.0, 800.0))

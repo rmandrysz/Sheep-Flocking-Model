@@ -266,7 +266,7 @@ public class Manager : MonoBehaviour
         }
         string path = string.Format("{0}/Data/SVGScreenshots/screen_{1}.txt", 
                             Application.dataPath, 
-                            screenshotCount);
+                            screenshotCount - 1);
         foreach (var agent in agents)
         {
             Vector3 position = agent.transform.position;
