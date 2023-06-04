@@ -24,7 +24,9 @@ public class Manager : MonoBehaviour
     private List<Vector3> data;
 
     public bool listenForScreenshots = false;
+    public float capturePeriod = 1f;
     private int screenshotCount = 0;
+    private int screenshotBatchCounter = 0;
 
     [Header("WallGeneration")]
     public float horizontalWallOffset;
@@ -50,16 +52,13 @@ public class Manager : MonoBehaviour
             obstacles.Add(wall);
         }
         SpawnWalls();
+        screenshotBatchCounter = 0;
     }
 
     private void FixedUpdate()
     {
         Calculate();
         AgentUpdate(Time.fixedDeltaTime);
-        if(listenForScreenshots)
-        {
-            SaveDataForSvg();
-        }
         if (predator)
         {
             predator.PredatorUpdate(Time.fixedDeltaTime);
@@ -108,10 +107,9 @@ public class Manager : MonoBehaviour
             Debug.Log("Speed up to 5");
             Time.timeScale = 5f;
         }
-        if(Input.GetKeyDown(KeyCode.K))
+        if(listenForScreenshots && Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("Here");
-            screenshotCount = 6;
+            StartCoroutine(CaptureSVGPeriodically());
         }
     }
 
@@ -258,15 +256,12 @@ public class Manager : MonoBehaviour
         } 
     }
 
-    private void SaveDataForSvg()
+    private void SaveDataForSvg(int nameNumber)
     {
-        if (screenshotCount <= 0 | skipFrame == 0)
-        {
-            return;
-        }
-        string path = string.Format("{0}/Data/SVGScreenshots/screen_{1}.txt", 
-                            Application.dataPath, 
-                            screenshotCount - 1);
+        string path = string.Format("{0}/Resources/Data/SVGScreenshots/Coordinates/screen_{1}_{2}.txt", 
+                            Application.dataPath,
+                            screenshotBatchCounter, 
+                            nameNumber);
         foreach (var agent in agents)
         {
             Vector3 position = agent.transform.position;
@@ -286,8 +281,6 @@ public class Manager : MonoBehaviour
                                 angle.z + "\n";
             File.AppendAllText(path, dataToSave);
         }
-
-        --screenshotCount;
     }
 
     private void SpawnWalls()
@@ -330,5 +323,17 @@ public class Manager : MonoBehaviour
 
     public static float AngleInDeg(Vector3 vec1, Vector3 vec2) {
         return AngleInRad(vec1, vec2) * 180 / Mathf.PI;
+    }
+
+    private IEnumerator CaptureSVGPeriodically()
+    {
+        screenshotCount = 6;
+        while(screenshotCount > 0){
+            --screenshotCount;
+            Debug.Log("Waited " + screenshotCount);
+            SaveDataForSvg(screenshotCount);
+            yield return new WaitForSeconds(capturePeriod);
+        }
+        ++screenshotBatchCounter;
     }
 }

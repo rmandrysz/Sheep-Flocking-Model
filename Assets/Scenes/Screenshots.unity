@@ -317,6 +317,7 @@ MonoBehaviour:
   obstacles: []
   saveToFile: 0
   listenForScreenshots: 1
+  capturePeriod: 0.4
   horizontalWallOffset: 73.5
   verticalWallOffset: 42.5
   wallSegmentSize: 5
