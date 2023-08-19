@@ -16,7 +16,7 @@ def calculateSheep(center, posx, posy, angle):
                 cx=x, cy=y,
                 rx=5.5, ry=7,
                 stroke="black",
-                fill="transparent",
+                fill="white",
                 stroke_width=1,
                 transform=[svg.Rotate(angle, x, y)]),\
             svg.Ellipse(
@@ -36,8 +36,19 @@ def calculateSheep(center, posx, posy, angle):
 def draw(data, sizeX, sizeY, shouldDrawPredator) -> svg.SVG:
     center = (float(sizeX/2), float(sizeY/2))
     predatorData = data[-1]
+
     sheep = [calculateSheep(center, sheep.posX, sheep.posY, sheep.angle) for sheep in data[:-1]]
-    result = [*sheep]
+
+    background = svg.Rect(fill='white', 
+                          stroke='transparent',
+                          width=600.0,
+                          height=400.0,
+                          x = 150.0,
+                          y = 150.0)
+    result = [background]
+
+    for s in sheep:
+        result.append(s)
 
     if shouldDrawPredator:
         predator = calculatePredator(center, predatorData.posX, predatorData.posY, predatorData.angle)
@@ -97,11 +108,11 @@ def saveToFile(batchNumber, screenNumber, input):
 
 if __name__ == '__main__':
     screenCount = 6
-    batchCount = 3
+    batchCount = 4
     shouldDrawPredator = False
     for batchCounter in range(batchCount):
         for screenCounter in range(screenCount):
             sheep = readFile(batchCounter, screenCounter)
-            output = str(draw(sheep, 1200.0, 800.0, shouldDrawPredator))
+            output = str(draw(sheep, 900.0, 700.0, shouldDrawPredator))
             saveToFile(batchCounter, screenCounter, output)
             # print(drawSheep(sheep, 1400.0, 800.0))

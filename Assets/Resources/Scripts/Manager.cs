@@ -34,6 +34,11 @@ public class Manager : MonoBehaviour
     public float wallSegmentSize;
     public GameObject wallSegmentPrefab;
 
+    [Header("Controlled test environment")]
+    public bool randomSpawnEnabled = true;
+    public int agentsInEvenRow = 12;
+    public int agentsInOddRow = 11;
+
     private int skipFrame = 0;
 
     private void Awake()
@@ -113,9 +118,9 @@ public class Manager : MonoBehaviour
         }
     }
 
-    public List<Agent> Spawn()
+    private List<Agent> SpawnRandom()
     {
-        List<Agent> localAgents = new();
+        List<Agent> spawnedAgents = new();
         for (int i = 0; i < agentNumber; ++i)
         {
             float x = Random.Range(-spawnRadius, spawnRadius);
@@ -123,17 +128,66 @@ public class Manager : MonoBehaviour
             Vector2 position = new(x, y);
             Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(-180f, 180f));
 
-            localAgents.Add(
+            spawnedAgents.Add(
                 GameObject.Instantiate(
                     agentPrefab, position, rotation, transform).GetComponent<Agent>());
                     
             if (predator)
             {
-                localAgents[i].predator = predator.transform;
+                spawnedAgents[i].predator = predator.transform;
             }
         }
 
-        return localAgents;
+        return spawnedAgents;
+    }
+
+    private List<Vector2> CalculateSpawnPositions()
+    {
+        List<Vector2> result = new();
+        int agentsLeftToSpawn = agentNumber;
+        int row = 0;
+
+        while (agentsLeftToSpawn > 0)
+        {
+            bool even = (row % 2) == 0;
+            var xAmount = even ? agentsInEvenRow : agentsInOddRow;
+            float y = transform.position.y + spawnRadius - (row * 10f); 
+
+            for( int j = 0; j < xAmount && agentsLeftToSpawn != 0; ++j, --agentsLeftToSpawn)
+            {
+                var x = transform.position.x - spawnRadius + (j * spawnRadius / xAmount);
+                if (!even)
+                {
+                    x += spawnRadius / agentsInEvenRow;
+                }
+                result.Add( new(x, y));
+            }
+            ++row;
+        }
+        return result;
+    } 
+
+    private List<Agent> SpawnNonRandom()
+    {
+        var positions = CalculateSpawnPositions();
+        List<Agent> spawnedAgents = new();
+        foreach(var pos in positions)
+        {
+            spawnedAgents.Add(
+                GameObject.Instantiate(
+                    agentPrefab, pos, Quaternion.identity, transform).GetComponent<Agent>());
+            Debug.Log(pos + "\n");
+        }
+        return spawnedAgents;
+    }
+
+    public List<Agent> Spawn()
+    {
+        if( randomSpawnEnabled )
+        {
+            return SpawnRandom();
+        }
+        return SpawnNonRandom();
     }
 
     private void Calculate()

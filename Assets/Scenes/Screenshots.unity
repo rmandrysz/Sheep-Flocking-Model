@@ -322,6 +322,9 @@ MonoBehaviour:
   verticalWallOffset: 42.5
   wallSegmentSize: 5
   wallSegmentPrefab: {fileID: 8405718670366725873, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
+  randomSpawnEnabled: 0
+  agentsInEvenRow: 11
+  agentsInOddRow: 12
 --- !u!4 &1387258924
 Transform:
   m_ObjectHideFlags: 0

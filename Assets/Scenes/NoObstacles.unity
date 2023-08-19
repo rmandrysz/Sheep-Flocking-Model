@@ -316,10 +316,15 @@ MonoBehaviour:
   playground: {fileID: 118671923}
   obstacles: []
   saveToFile: 0
+  listenForScreenshots: 0
+  capturePeriod: 1
   horizontalWallOffset: 73.5
   verticalWallOffset: 42.5
   wallSegmentSize: 5
   wallSegmentPrefab: {fileID: 8405718670366725873, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
+  randomSpawnEnabled: 0
+  agentsInEvenRow: 12
+  agentsInOddRow: 11
 --- !u!4 &1387258924
 Transform:
   m_ObjectHideFlags: 0
