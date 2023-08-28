@@ -5,12 +5,14 @@ using System.IO;
 
 public class Manager : MonoBehaviour
 {
+    [Header("Spawning")]
     public int agentNumber = 100;
     public float spawnRadius = 20f;
 
-    List<Agent> agents;
+    [Header("References")]
     public GameObject predatorPrefab;
     public Predator predator;
+    private List<Agent> agents;
 
     [SerializeField]
     private GameObject agentPrefab;
@@ -19,6 +21,7 @@ public class Manager : MonoBehaviour
     public Transform playground;
     public List<Transform> obstacles;
 
+    [Header("Data collecting")]
     [SerializeField]
     private bool saveToFile;
     private List<Vector3> data;
@@ -38,12 +41,17 @@ public class Manager : MonoBehaviour
     public bool randomSpawnEnabled = true;
     public int agentsInEvenRow = 12;
     public int agentsInOddRow = 11;
+    public float maxSpawnX = 20f;
+    public float maxSpawnY = 20f;
+    public float spawnGapY = 10f;
+    public float spawnGapX = 5f;
+    public int test = 0;
 
     private int skipFrame = 0;
 
     private void Awake()
     {
-        // Application.targetFrameRate = 60;
+        Application.targetFrameRate = 60;
         agents = Spawn();
     }
 
@@ -116,6 +124,17 @@ public class Manager : MonoBehaviour
         {
             StartCoroutine(CaptureSVGPeriodically());
         }
+        test += 1;
+        if (test == 1000)
+        {
+            float xSum = 0f;
+            foreach (var agent in agents)
+            {
+                xSum += agent.transform.position.x;
+            }
+            Debug.Log("Sum of X: " + xSum + "\n");
+            test = 0;
+        }
     }
 
     private List<Agent> SpawnRandom()
@@ -146,19 +165,20 @@ public class Manager : MonoBehaviour
         List<Vector2> result = new();
         int agentsLeftToSpawn = agentNumber;
         int row = 0;
+        int numberOfRows = 2 * agentNumber / (agentsInEvenRow + agentsInOddRow);
 
         while (agentsLeftToSpawn > 0)
         {
             bool even = (row % 2) == 0;
             var xAmount = even ? agentsInEvenRow : agentsInOddRow;
-            float y = transform.position.y + spawnRadius - (row * 10f); 
+            float y = transform.position.y + maxSpawnY - (row * spawnGapY);
 
             for( int j = 0; j < xAmount && agentsLeftToSpawn != 0; ++j, --agentsLeftToSpawn)
             {
-                var x = transform.position.x - spawnRadius + (j * spawnRadius / xAmount);
+                var x = transform.position.x - maxSpawnX + (j * spawnGapX);
                 if (!even)
                 {
-                    x += spawnRadius / agentsInEvenRow;
+                    x += spawnGapX / 2;
                 }
                 result.Add( new(x, y));
             }
@@ -174,9 +194,8 @@ public class Manager : MonoBehaviour
         foreach(var pos in positions)
         {
             spawnedAgents.Add(
-                GameObject.Instantiate(
+                Instantiate(
                     agentPrefab, pos, Quaternion.identity, transform).GetComponent<Agent>());
-            Debug.Log(pos + "\n");
         }
         return spawnedAgents;
     }

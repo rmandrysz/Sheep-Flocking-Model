@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentNumber: 46
-  spawnRadius: 30
+  spawnRadius: 20
   predatorPrefab: {fileID: 3599853321251493274, guid: 5740851fb676242438691f6cb08a57c5, type: 3}
   predator: {fileID: 0}
   agentPrefab: {fileID: 6951958027865408579, guid: 2334da2a96e704d439d1e519c261ea26, type: 3}
@@ -325,6 +325,10 @@ MonoBehaviour:
   randomSpawnEnabled: 0
   agentsInEvenRow: 12
   agentsInOddRow: 11
+  maxSpawnX: 33
+  maxSpawnY: 15
+  spawnGapY: 10
+  spawnGapX: 6
 --- !u!4 &1387258924
 Transform:
   m_ObjectHideFlags: 0
