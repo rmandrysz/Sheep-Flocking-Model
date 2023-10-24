@@ -29,3 +29,4 @@ MonoBehaviour:
   sightAngle: 150
   flightZoneRadius: 60
   maxRotationDegrees: 100
+  manualPredatorControl: 0

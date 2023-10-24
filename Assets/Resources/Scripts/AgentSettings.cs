@@ -34,4 +34,7 @@ public class AgentSettings : ScriptableObject
 
     [Header ("Visuals")]
     public float maxRotationDegrees = 1f;
+
+    [Header ("Predator Control")]
+    public bool manualPredatorControl = false;
 }

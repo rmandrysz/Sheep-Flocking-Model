@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor;
 
 public class Manager : MonoBehaviour
 {
@@ -66,6 +67,11 @@ public class Manager : MonoBehaviour
         }
         SpawnWalls();
         screenshotBatchCounter = 0;
+
+        if (!settings.manualPredatorControl)
+        {
+            SpawnPredator();
+        }
     }
 
     private void FixedUpdate()
@@ -79,11 +85,21 @@ public class Manager : MonoBehaviour
     }
     
     private void Update() {
+        Camera cam = Camera.main;
+        if (!settings.manualPredatorControl)
+        {
+            Vector3 predatorFinalTarget = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
+            predatorFinalTarget.z = 0;
+            if (predator.transform.position == predatorFinalTarget)
+            {
+                Quit();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.S) && !predator)
         {
             SpawnPredator();
         }
-        if (Input.GetKeyDown(KeyCode.D) && predator)
+        if (Input.GetKeyDown(KeyCode.D) && predator && settings.manualPredatorControl)
         {
             if(Input.GetKeyDown(KeyCode.D))
             {
@@ -285,10 +301,23 @@ public class Manager : MonoBehaviour
 
     private void SpawnPredator()
     {
-        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        targetPosition.z = 0;
+        var cam = Camera.main;
+        Vector3 spawnPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        spawnPosition.z = 0;
+        Vector3 targetPosition = spawnPosition;
+        
+        if (!settings.manualPredatorControl)
+        {
+            spawnPosition = cam.ScreenToWorldPoint(new(0, 0));
+            spawnPosition.z = 0;
+            targetPosition = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
+            targetPosition.z = 0;
+        }
 
-        predator = GameObject.Instantiate(predatorPrefab, targetPosition, Quaternion.identity).GetComponent<Predator>();
+        predator = GameObject.Instantiate(predatorPrefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
+        predator.manualControl = settings.manualPredatorControl;
+        predator.targetPosition = targetPosition;
+
         foreach(var agent in agents)
         {
             agent.predator = predator.transform;
@@ -310,12 +339,12 @@ public class Manager : MonoBehaviour
     private void SaveData()
     {
         int dataNumber = 0;
-        string path = Application.dataPath + "/Data/Files/Data" + dataNumber + ".txt";
+        string path = Application.dataPath + "/Resources/Data/Files/Data" + dataNumber + ".txt";
 
         while(File.Exists(path))
         {
             ++dataNumber;
-            path = Application.dataPath + "/Data/Files/Data" + dataNumber + ".txt";
+            path = Application.dataPath + "/Resources/Data/Files/Data" + dataNumber + ".txt";
         }
 
         foreach ( Vector3 point in data )
@@ -408,5 +437,11 @@ public class Manager : MonoBehaviour
             yield return new WaitForSeconds(capturePeriod);
         }
         ++screenshotBatchCounter;
+    }
+
+    private void Quit()
+    {
+        // OnApplicationQuit();
+        EditorApplication.isPlaying = false;
     }
 }

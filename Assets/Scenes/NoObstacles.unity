@@ -329,6 +329,7 @@ MonoBehaviour:
   maxSpawnY: 15
   spawnGapY: 10
   spawnGapX: 6
+  test: 0
 --- !u!4 &1387258924
 Transform:
   m_ObjectHideFlags: 0
