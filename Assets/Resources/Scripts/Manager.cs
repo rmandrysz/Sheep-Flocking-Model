@@ -82,6 +82,7 @@ public class Manager : MonoBehaviour
         {
             predator.PredatorUpdate(Time.fixedDeltaTime);
         }
+        DebugPrintSumOfPositions();
     }
     
     private void Update() {
@@ -139,17 +140,6 @@ public class Manager : MonoBehaviour
         if(listenForScreenshots && Input.GetKeyDown(KeyCode.K))
         {
             StartCoroutine(CaptureSVGPeriodically());
-        }
-        test += 1;
-        if (test == 1000)
-        {
-            float xSum = 0f;
-            foreach (var agent in agents)
-            {
-                xSum += agent.transform.position.x;
-            }
-            Debug.Log("Sum of X: " + xSum + "\n");
-            test = 0;
         }
     }
 
@@ -259,12 +249,11 @@ public class Manager : MonoBehaviour
                 {
                     if (i == 0)
                     {
-                        // Debug.DrawRay(agent.transform.position, offset, Color.magenta);
                         Debug.DrawRay(agent.transform.position, agent.previousDirection.normalized * 3, Color.blue);
                     }
                     Color color = new(0f, 255f, 0f);
                     ++agent.numFlockmates;
-                    agent.averageFlockmateVelocity += neighbor.GetDirection();
+                    agent.averageFlockmateVelocity += neighbor.direction;
                     agent.averageFlockCenter += neighbor.transform.position;
 
                     if (sqrDist <= avoidanceRadius * avoidanceRadius)
@@ -314,7 +303,7 @@ public class Manager : MonoBehaviour
             targetPosition.z = 0;
         }
 
-        predator = GameObject.Instantiate(predatorPrefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
+        predator = Instantiate(predatorPrefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
         predator.manualControl = settings.manualPredatorControl;
         predator.targetPosition = targetPosition;
 
@@ -387,8 +376,6 @@ public class Manager : MonoBehaviour
 
     private void SpawnWalls()
     {
-        float halfSegmentSize = wallSegmentSize / 2;
-
         for( float i = -verticalWallOffset; i <= verticalWallOffset; i += wallSegmentSize )
         {
             Vector3 position1 = new(-horizontalWallOffset, i, 0f);
@@ -423,10 +410,6 @@ public class Manager : MonoBehaviour
         return Mathf.Atan2(vec1.y - vec2.y, vec1.x - vec2.x);
     }
 
-    public static float AngleInDeg(Vector3 vec1, Vector3 vec2) {
-        return AngleInRad(vec1, vec2) * 180 / Mathf.PI;
-    }
-
     private IEnumerator CaptureSVGPeriodically()
     {
         screenshotCount = 6;
@@ -441,7 +424,21 @@ public class Manager : MonoBehaviour
 
     private void Quit()
     {
-        // OnApplicationQuit();
         EditorApplication.isPlaying = false;
+    }
+
+    private void DebugPrintSumOfPositions()
+    {
+        test += 1;
+        if (test == 1000)
+        {
+            float xSum = 0f;
+            foreach (var agent in agents)
+            {
+                xSum += agent.transform.position.x;
+            }
+            Debug.Log("Sum of X: " + xSum + "\n");
+            test = 0;
+        }
     }
 }

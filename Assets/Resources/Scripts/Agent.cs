@@ -27,9 +27,7 @@ public class Agent : MonoBehaviour
     {
         ResetAccumulators();
 
-        float x = Random.Range(-1f, 1f);
-        float y = Random.Range(-1f, 1f);
-        direction = new Vector3(x, y, 0f).normalized;
+        direction = Vector3.zero;
         previousDirection = Vector3.zero;
     }
 
@@ -46,12 +44,6 @@ public class Agent : MonoBehaviour
 
         UpdateDirection();
         Move(dt);
-
-        if (predator && debug)
-        {
-            float distance = (predator.position - transform.position).magnitude;
-            // Debug.Log(string.Format("Distance: {0}, Flightzone Radius: {1}, SmoothStep Value: {2}", distance, settings.flightZoneRadius, PredatorSmoothStep()));
-        }
     }
 
     private void Move(float dt)
@@ -60,7 +52,7 @@ public class Agent : MonoBehaviour
 
         if (direction.sqrMagnitude != 0f)
         {
-            RotateInMoveDirectionSmooth(dt);
+            RotateInMoveDirection(dt);
         }
 
         previousDirection = direction;
@@ -77,23 +69,13 @@ public class Agent : MonoBehaviour
         }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
-
-        if(debug)
-        {
-            Debug.DrawRay(transform.position, flockmateCollisionAvoidance * weight, Color.magenta);
-        }
     }
 
     public void AddFlockmateAvoidance(Vector3 offset)
     {
         float distance = offset.magnitude;
-        Vector3 newAvoidance = ((-offset / distance) * InvSquare(distance, settings.flockmateAvoidanceSoftener));
-        Vector3 oldAvoidance = (-offset / (distance * distance));
+        Vector3 newAvoidance = (-offset / distance) * InvSquare(distance, settings.flockmateAvoidanceSoftener);
         flockmateCollisionAvoidance += newAvoidance;
-        if (debug)
-        {
-            // Debug.Log(string.Format("InvSquare: {0}, OldMethod: {0}", newAvoidance, oldAvoidance));
-        }
     }
 
     private void MatchVelocity()
@@ -125,12 +107,6 @@ public class Agent : MonoBehaviour
         }
 
         averageFlockCenter /= numFlockmates;
-        
-        if(debug)
-        {
-            Debug.DrawRay(transform.position, averageFlockCenter - transform.position, Color.yellow);
-            // Debug.Log("Average Flock Center: " + averageFlockCenter.magnitude);
-        }
 
         if (!predator)
         {
@@ -152,7 +128,6 @@ public class Agent : MonoBehaviour
     {
         var offset = transform.position - predator.position;
         var escapeDirection = PredatorSmoothStep() * settings.escapeWeight * Vector3.Normalize(offset);
-        // escapeDirection *= InvSquare(offset.magnitude, 10f);
 
         RequestDirection(escapeDirection, "Escape From Predator!");
     }
@@ -175,10 +150,6 @@ public class Agent : MonoBehaviour
         foreach (var request in accumulator)
         {
             direction += request.direction * request.magnitude;
-            if(debug)
-            {
-                // Debug.Log("Taking " + request.name + " into account. Request magnitude: " + request.magnitude);
-            }
         }
 
         direction = Vector3.ClampMagnitude(direction, maxSpeed);
@@ -203,24 +174,12 @@ public class Agent : MonoBehaviour
         averageFlockmateVelocity = Vector3.zero;
     }
 
-    private void RotateInMoveDirection()
-    {
-        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        var rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = rotation;
-    }
-
-    private void RotateInMoveDirectionSmooth(float dt)
+    private void RotateInMoveDirection(float dt)
     {
         Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction.normalized);
         targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, settings.maxRotationDegrees * dt);
 
         transform.rotation = targetRotation;
-    }
-
-    public Vector3 GetDirection()
-    {
-        return direction;
     }
 
     public static float InvSquare(float x, float softener) 
@@ -230,18 +189,7 @@ public class Agent : MonoBehaviour
 
         return result;
     }
-
-    public float Sigmoid(float softeningFactor = 1f)
-    {
-        if (!predator)
-        {
-            return 0;
-        }
-        var offset = transform.position - predator.position;
-        return ((1 / Mathf.PI) * Mathf.Atan((settings.flightZoneRadius - offset.magnitude)) + 0.5f);
-        // return 0f;
-    }
-
+    
     private float PredatorSmoothStep(float min = 0f, float max = 3f)
     {
         if (!predator)
@@ -254,7 +202,7 @@ public class Agent : MonoBehaviour
 
         flipped = Mathf.Clamp(flipped, 0f, settings.flightZoneRadius);
 
-        float interpolationPoint = (flipped / settings.flightZoneRadius);
+        float interpolationPoint = flipped / settings.flightZoneRadius;
 
         float result = Mathf.SmoothStep(min, max, interpolationPoint);
 
