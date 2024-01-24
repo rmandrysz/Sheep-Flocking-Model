@@ -32,12 +32,6 @@ public class Manager : MonoBehaviour
     private int screenshotCount = 0;
     private int screenshotBatchCounter = 0;
 
-    [Header("WallGeneration")]
-    public float horizontalWallOffset;
-    public float verticalWallOffset;
-    public float wallSegmentSize;
-    public GameObject wallSegmentPrefab;
-
     [Header("Controlled test environment")]
     public bool randomSpawnEnabled = true;
     public int agentsInEvenRow = 12;
@@ -57,11 +51,7 @@ public class Manager : MonoBehaviour
         data = new List<Data>();
         obstacles = new List<Transform>();
         settings = agents[0].settings;
-        foreach(Transform wall in playground)
-        {
-            obstacles.Add(wall);
-        }
-        SpawnWalls();
+
         screenshotBatchCounter = 0;
 
         if (!settings.manualPredatorControl)
@@ -363,30 +353,6 @@ public class Manager : MonoBehaviour
                                 predatorPosition.y + "\t" +
                                 angle.z + "\n";
             File.AppendAllText(path, dataToSave);
-        }
-    }
-
-    private void SpawnWalls()
-    {
-        for( float i = -verticalWallOffset; i <= verticalWallOffset; i += wallSegmentSize )
-        {
-            Vector3 position1 = new(-horizontalWallOffset, i, 0f);
-            Vector3 position2 = new(horizontalWallOffset, i, 0f);
-            Transform segment1 = GameObject.Instantiate(wallSegmentPrefab, position1, Quaternion.identity, playground).transform;
-            Transform segment2 = GameObject.Instantiate(wallSegmentPrefab, position2, Quaternion.identity, playground).transform;
-
-            obstacles.Add(segment1);
-            obstacles.Add(segment2);
-        }
-        for( float i = -horizontalWallOffset; i <= horizontalWallOffset; i += wallSegmentSize )
-        {
-            Vector3 position1 = new(i, -verticalWallOffset, 0f);
-            Vector3 position2 = new(i, verticalWallOffset, 0f);
-            Transform segment1 = GameObject.Instantiate(wallSegmentPrefab, position1, Quaternion.identity, playground).transform;
-            Transform segment2 = GameObject.Instantiate(wallSegmentPrefab, position2, Quaternion.identity, playground).transform;
-
-            obstacles.Add(segment1);
-            obstacles.Add(segment2);
         }
     }
 

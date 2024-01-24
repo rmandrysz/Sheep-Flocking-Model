@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5509add2f0a1d94e94c959ae013c851, type: 3}
-  m_Name: SettingsScreenshots
+  m_Name: DefaultAgentSettings
   m_EditorClassIdentifier: 
-  initialMinSpeed: 0.3
-  finalMinSpeed: 0.3
-  initialMaxSpeed: 9
+  initialMinSpeed: 0.7
+  finalMinSpeed: 0.7
+  initialMaxSpeed: 8
   finalMaxSpeed: 12
   obstacleAvoidSoftener: 15
-  flockmateAvoidanceWeight: 10
-  flockCenteringWeight: 0.6
-  velocityMatchingWeight: 0.1
+  flockmateAvoidanceWeight: 0.9
+  flockCenteringWeight: 0.45
+  velocityMatchingWeight: 0.2
   obstacleAvoidanceWeight: 0.75
-  escapeWeight: 5
-  adjustedFlockmateAvoidanceWeight: 15
-  flockmateAvoidanceRadius: 6
+  escapeWeight: 4
+  adjustedFlockmateAvoidanceWeight: 1.45
+  flockmateAvoidanceRadius: 4
   flockmateAvoidanceSoftener: 0.6
-  flockmateDetectionRadius: 11
+  flockmateDetectionRadius: 6
   sightAngle: 150
   flightZoneRadius: 60
-  maxRotationDegrees: 100
+  maxRotationDegrees: 130
   manualPredatorControl: 0
