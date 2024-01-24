@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ce4138d9dbae646bdf6749be978e58, type: 3}
+  m_Name: DefaultPrefabList
+  m_EditorClassIdentifier: 
+  wallSegmentPrefab: {fileID: 8405718670366725873, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
+  agentPrefab: {fileID: 6951958027865408579, guid: 2334da2a96e704d439d1e519c261ea26, type: 3}
+  predatorPrefab: {fileID: 3599853321251493274, guid: 5740851fb676242438691f6cb08a57c5, type: 3}
