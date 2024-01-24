@@ -25,7 +25,7 @@ public class Manager : MonoBehaviour
     [Header("Data collecting")]
     [SerializeField]
     private bool saveToFile;
-    private List<Vector3> data;
+    private List<Data> data;
 
     public bool listenForScreenshots = false;
     public float capturePeriod = 1f;
@@ -44,11 +44,7 @@ public class Manager : MonoBehaviour
     public int agentsInOddRow = 11;
     public float maxSpawnX = 20f;
     public float maxSpawnY = 20f;
-    public float spawnGapY = 10f;
-    public float spawnGapX = 5f;
-    public int test = 0;
-
-    private int skipFrame = 0;
+    public float spawnGap = 5f;
 
     private void Awake()
     {
@@ -58,7 +54,7 @@ public class Manager : MonoBehaviour
 
     private void Start()
     {
-        data = new List<Vector3>();
+        data = new List<Data>();
         obstacles = new List<Transform>();
         settings = agents[0].settings;
         foreach(Transform wall in playground)
@@ -82,7 +78,6 @@ public class Manager : MonoBehaviour
         {
             predator.PredatorUpdate(Time.fixedDeltaTime);
         }
-        DebugPrintSumOfPositions();
     }
     
     private void Update() {
@@ -172,19 +167,20 @@ public class Manager : MonoBehaviour
         int agentsLeftToSpawn = agentNumber;
         int row = 0;
         int numberOfRows = 2 * agentNumber / (agentsInEvenRow + agentsInOddRow);
+        float heightOffset = spawnGap * Mathf.Sqrt(3) / 4;
 
         while (agentsLeftToSpawn > 0)
         {
             bool even = (row % 2) == 0;
             var xAmount = even ? agentsInEvenRow : agentsInOddRow;
-            float y = transform.position.y + maxSpawnY - (row * spawnGapY);
+            float y = transform.position.y + maxSpawnY - (row * heightOffset);
 
             for( int j = 0; j < xAmount && agentsLeftToSpawn != 0; ++j, --agentsLeftToSpawn)
             {
-                var x = transform.position.x - maxSpawnX + (j * spawnGapX);
+                var x = transform.position.x - maxSpawnX + (j * spawnGap);
                 if (!even)
                 {
-                    x += spawnGapX / 2;
+                    x += spawnGap / 2;
                 }
                 result.Add( new(x, y));
             }
@@ -268,16 +264,14 @@ public class Manager : MonoBehaviour
                 }
             }
 
-            if (saveToFile && predator && skipFrame != 0 && agent.averageFlockCenter != Vector3.zero)
+            if (saveToFile && predator && agent.averageFlockCenter != Vector3.zero)
             {
-                float oldPredatorDistance = (predator.transform.position - agent.transform.position).magnitude;
-                float centerDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
-                float newPredatorDistance = (predator.transform.position - (agent.averageFlockCenter / agent.numFlockmates)).magnitude;
-                Vector4 state = new Vector3(agent.previousDirection.magnitude, newPredatorDistance, centerDistance);
-                data.Add(state);
+                Data dataPoint;
+                dataPoint.predatorCenterDistance = (predator.transform.position - (agent.averageFlockCenter / agent.numFlockmates)).magnitude;
+                dataPoint.agentCenterDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
+                data.Add(dataPoint);
             }
         }
-        skipFrame = 1 - skipFrame;
     }
 
     private void AgentUpdate(float dt)
@@ -336,13 +330,11 @@ public class Manager : MonoBehaviour
             path = Application.dataPath + "/Resources/Data/Files/Data" + dataNumber + ".txt";
         }
 
-        foreach ( Vector3 point in data )
+        foreach ( var point in data )
         {
-            string pointData = point.x 
-                    + "\t" + point.y 
-                    + "\t" + point.z
-                    + "\n"
-            ;
+            string pointData = point.predatorCenterDistance 
+                    + "\t" + point.agentCenterDistance 
+                    + "\n";
             File.AppendAllText(path, pointData);
         } 
     }
@@ -427,18 +419,9 @@ public class Manager : MonoBehaviour
         EditorApplication.isPlaying = false;
     }
 
-    private void DebugPrintSumOfPositions()
+    private struct Data
     {
-        test += 1;
-        if (test == 1000)
-        {
-            float xSum = 0f;
-            foreach (var agent in agents)
-            {
-                xSum += agent.transform.position.x;
-            }
-            Debug.Log("Sum of X: " + xSum + "\n");
-            test = 0;
-        }
+        public float predatorCenterDistance;
+        public float agentCenterDistance;
     }
 }
