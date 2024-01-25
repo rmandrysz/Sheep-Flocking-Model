@@ -37,4 +37,9 @@ public class AgentSettings : ScriptableObject
 
     [Header ("Predator Control")]
     public bool manualPredatorControl = false;
+
+    [Header ("Spawn Rules")]
+    public bool enableRandomSpawn = false;
+    public int agentNumber = 46;
+    public float spawnRadius = 20f;
 }

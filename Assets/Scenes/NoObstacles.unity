@@ -154,6 +154,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &438022941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 438022942}
+  m_Layer: 0
+  m_Name: AgentContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &438022942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438022941}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4279075, y: -7.2422533, z: -8.451939}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &538861909
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,7 +217,7 @@ MonoBehaviour:
   prefabs: {fileID: 11400000, guid: 3f15c2b0ba8af994185140a3aba0bbc1, type: 2}
   playgroundSettings: {fileID: 11400000, guid: 26953d033a7e88642b0410cf878b8bee, type: 2}
   agentSettings: {fileID: 11400000, guid: 199d368bbd20aa1409f6e9f602dc6b57, type: 2}
-  playground: {fileID: 118671922}
+  playgroundObject: {fileID: 0}
 --- !u!4 &538861911
 Transform:
   m_ObjectHideFlags: 0
@@ -241,10 +272,6 @@ MonoBehaviour:
   saveToFile: 0
   listenForScreenshots: 0
   capturePeriod: 1
-  horizontalWallOffset: 73.5
-  verticalWallOffset: 42.5
-  wallSegmentSize: 5
-  wallSegmentPrefab: {fileID: 8405718670366725873, guid: f37424eb65b268f43ac2cfac5bd3b8d3, type: 3}
   randomSpawnEnabled: 0
   agentsInEvenRow: 12
   agentsInOddRow: 11

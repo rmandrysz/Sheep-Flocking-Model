@@ -184,7 +184,7 @@ public class Agent : MonoBehaviour
 
     public static float InvSquare(float x, float softener) 
     {
-        float eps = 0.000001f;
+        const float eps = 0.000001f;
         float result = Mathf.Pow((x + eps) / softener, -2);
 
         return result;
