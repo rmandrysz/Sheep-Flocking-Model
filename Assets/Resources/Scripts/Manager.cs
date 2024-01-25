@@ -42,90 +42,90 @@ public class Manager : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = 60;
-        agents = Spawn();
+        // Application.targetFrameRate = 60;
+        // agents = Spawn();
     }
 
     private void Start()
     {
-        data = new List<Data>();
-        obstacles = new List<Transform>();
-        settings = agents[0].settings;
+        // data = new List<Data>();
+        // obstacles = new List<Transform>();
+        // settings = agents[0].settings;
 
-        screenshotBatchCounter = 0;
+        // screenshotBatchCounter = 0;
 
-        if (!settings.manualPredatorControl)
-        {
-            SpawnPredator();
-        }
+        // if (!settings.manualPredatorControl)
+        // {
+        //     SpawnPredator();
+        // }
     }
 
     private void FixedUpdate()
     {
-        Calculate();
-        AgentUpdate(Time.fixedDeltaTime);
-        if (predator)
-        {
-            predator.PredatorUpdate(Time.fixedDeltaTime);
-        }
+        // Calculate();
+        // AgentUpdate(Time.fixedDeltaTime);
+        // if (predator)
+        // {
+        //     predator.UpdatePredator(Time.fixedDeltaTime);
+        // }
     }
     
     private void Update() {
-        Camera cam = Camera.main;
-        if (!settings.manualPredatorControl)
-        {
-            Vector3 predatorFinalTarget = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
-            predatorFinalTarget.z = 0;
-            if (predator.transform.position == predatorFinalTarget)
-            {
-                Quit();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.S) && !predator)
-        {
-            SpawnPredator();
-        }
-        if (Input.GetKeyDown(KeyCode.D) && predator && settings.manualPredatorControl)
-        {
-            if(Input.GetKeyDown(KeyCode.D))
-            {
-                DespawnPredator();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            Debug.Log("Speed up to 0.5");
-            Time.timeScale = 0.5f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Debug.Log("Speed up to 2");
-            Time.timeScale = 2f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Debug.Log("Speed up to 1");
-            Time.timeScale = 1f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Debug.Log("Speed up to 3");
-            Time.timeScale = 3f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Debug.Log("Speed up to 4");
-            Time.timeScale = 4f;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            Debug.Log("Speed up to 5");
-            Time.timeScale = 5f;
-        }
-        if(listenForScreenshots && Input.GetKeyDown(KeyCode.K))
-        {
-            StartCoroutine(CaptureSVGPeriodically());
-        }
+        // Camera cam = Camera.main;
+        // if (!settings.manualPredatorControl)
+        // {
+        //     Vector3 predatorFinalTarget = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
+        //     predatorFinalTarget.z = 0;
+        //     if (predator.transform.position == predatorFinalTarget)
+        //     {
+        //         Quit();
+        //     }
+        // }
+        // if (Input.GetKeyDown(KeyCode.S) && !predator)
+        // {
+        //     SpawnPredator();
+        // }
+        // if (Input.GetKeyDown(KeyCode.D) && predator && settings.manualPredatorControl)
+        // {
+        //     if(Input.GetKeyDown(KeyCode.D))
+        //     {
+        //         DespawnPredator();
+        //     }
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha0))
+        // {
+        //     Debug.Log("Speed up to 0.5");
+        //     Time.timeScale = 0.5f;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha2))
+        // {
+        //     Debug.Log("Speed up to 2");
+        //     Time.timeScale = 2f;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     Debug.Log("Speed up to 1");
+        //     Time.timeScale = 1f;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha3))
+        // {
+        //     Debug.Log("Speed up to 3");
+        //     Time.timeScale = 3f;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha4))
+        // {
+        //     Debug.Log("Speed up to 4");
+        //     Time.timeScale = 4f;
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha5))
+        // {
+        //     Debug.Log("Speed up to 5");
+        //     Time.timeScale = 5f;
+        // }
+        // if(listenForScreenshots && Input.GetKeyDown(KeyCode.K))
+        // {
+        //     StartCoroutine(CaptureSVGPeriodically());
+        // }
     }
 
     private List<Agent> SpawnRandom()

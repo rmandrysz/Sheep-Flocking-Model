@@ -217,7 +217,8 @@ MonoBehaviour:
   prefabs: {fileID: 11400000, guid: 3f15c2b0ba8af994185140a3aba0bbc1, type: 2}
   playgroundSettings: {fileID: 11400000, guid: 26953d033a7e88642b0410cf878b8bee, type: 2}
   agentSettings: {fileID: 11400000, guid: 199d368bbd20aa1409f6e9f602dc6b57, type: 2}
-  playgroundObject: {fileID: 0}
+  playgroundObject: {fileID: 118671922}
+  agentContainerObject: {fileID: 438022941}
 --- !u!4 &538861911
 Transform:
   m_ObjectHideFlags: 0

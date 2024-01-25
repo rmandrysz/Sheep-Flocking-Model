@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class SimulationController : MonoBehaviour
@@ -9,30 +10,47 @@ public class SimulationController : MonoBehaviour
     private PlaygroundManager playgroundManager;
     private Predator predator;
     
-    [SerializeField] private readonly PrefabList prefabs;
-    [SerializeField] private readonly PlaygroundSettings playgroundSettings;
-    [SerializeField] private readonly AgentSettings agentSettings;
-    [SerializeField] private readonly GameObject playgroundObject;
-    [SerializeField] private readonly GameObject agentContainerObject;
+    [SerializeField] private PrefabList prefabs;
+    [SerializeField] private PlaygroundSettings playgroundSettings;
+    [SerializeField] private AgentSettings agentSettings;
+    [SerializeField] private GameObject playgroundObject;
+    [SerializeField] private GameObject agentContainerObject;
 
     private void Awake() 
     {
+        Application.targetFrameRate = 60;
         agentManager = new(agentSettings, agentContainerObject, prefabs.agentPrefab);
         dataCollector = new();
         playgroundManager = new(playgroundObject, prefabs.wallSegmentPrefab, playgroundSettings);
-        // predator = new();
     }
 
     private void Start() 
     {
         playgroundManager.StartPlayground();
         agentManager.StartAgents();
-        // predator.StartPredator();
+        predator = StartPredator();
+        agentManager.AttachPredator(predator);
     }
 
     private void FixedUpdate() 
     {
         agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls);
-        // predator.UpdatePredator(Time.fixedDeltaTime);
+        predator.UpdatePredator(Time.fixedDeltaTime);
+
+        if (predator.transform.position == predator.targetPosition)
+        {
+            // TODO: Move to predator   
+            Quit();
+        }
+    }
+
+    private Predator StartPredator()
+    {
+        return Predator.Spawn(prefabs.predatorPrefab, playgroundSettings);
+    }
+
+    private void Quit()
+    {
+        EditorApplication.isPlaying = false;
     }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AgentManager
 {
-    public static AgentManager instance {get; private set;}
-
     private static GameObject agentContainer;
 
     private readonly AgentSettings settings;
@@ -45,7 +43,6 @@ public class AgentManager
         for (int i = 0; i < settings.agentNumber; ++i)
         {
             var agent = agents[i];
-
 
             agent.ResetAccumulators();
             agent.numFlockmates = 0;
@@ -95,6 +92,14 @@ public class AgentManager
     private void AgentUpdate(float dt)
     {
         agents.ForEach(agent => agent.AgentUpdate(dt));
+    }
+
+    public void AttachPredator(Predator predator)
+    {
+        // TODO: Make predator a reference in the agent script so you don't have to iterate
+        // and put it like that manually
+        // OR: pass predator as argument to update everytime
+        agents.ForEach(agent => agent.predator = predator.transform);
     }
 
     private void SpawnRandom()
