@@ -35,9 +35,6 @@ public class AgentSettings : ScriptableObject
     [Header ("Visuals")]
     public float maxRotationDegrees = 1f;
 
-    [Header ("Predator Control")]
-    public bool manualPredatorControl = false;
-
     [Header ("Spawn Rules")]
     public bool enableRandomSpawn = false;
     public int agentNumber = 46;

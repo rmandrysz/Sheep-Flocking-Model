@@ -38,8 +38,7 @@ public class SimulationController : MonoBehaviour
 
         if (predator.transform.position == predator.targetPosition)
         {
-            // TODO: Move to predator   
-            Quit();
+            EndSimulation();
         }
     }
 
@@ -48,7 +47,7 @@ public class SimulationController : MonoBehaviour
         return Predator.Spawn(prefabs.predatorPrefab, playgroundSettings);
     }
 
-    private void Quit()
+    private void EndSimulation()
     {
         EditorApplication.isPlaying = false;
     }

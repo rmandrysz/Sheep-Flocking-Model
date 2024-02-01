@@ -279,16 +279,16 @@ public class Manager : MonoBehaviour
         spawnPosition.z = 0;
         Vector3 targetPosition = spawnPosition;
         
-        if (!settings.manualPredatorControl)
-        {
-            spawnPosition = cam.ScreenToWorldPoint(new(0, 0));
-            spawnPosition.z = 0;
-            targetPosition = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
-            targetPosition.z = 0;
-        }
+        // if (!settings.manualPredatorControl)
+        // {
+        //     spawnPosition = cam.ScreenToWorldPoint(new(0, 0));
+        //     spawnPosition.z = 0;
+        //     targetPosition = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
+        //     targetPosition.z = 0;
+        // }
 
         predator = Instantiate(predatorPrefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
-        predator.manualControl = settings.manualPredatorControl;
+        // predator.manualControl = settings.manualPredatorControl;
         predator.targetPosition = targetPosition;
 
         foreach(var agent in agents)
