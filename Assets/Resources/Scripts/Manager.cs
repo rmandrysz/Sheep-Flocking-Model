@@ -142,10 +142,10 @@ public class Manager : MonoBehaviour
                 GameObject.Instantiate(
                     agentPrefab, position, rotation, transform).GetComponent<Agent>());
                     
-            if (predator)
-            {
-                spawnedAgents[i].predator = predator.transform;
-            }
+            // if (predator)
+            // {
+            //     spawnedAgents[i].predator = predator.transform;
+            // }
         }
 
         return spawnedAgents;
@@ -268,7 +268,7 @@ public class Manager : MonoBehaviour
     {
         foreach (var agent in agents)
         {
-            agent.AgentUpdate(dt);
+            // agent.AgentUpdate(dt);
         }
     }
 
@@ -293,7 +293,7 @@ public class Manager : MonoBehaviour
 
         foreach(var agent in agents)
         {
-            agent.predator = predator.transform;
+            // agent.predator = predator.transform;
         }
     }
 

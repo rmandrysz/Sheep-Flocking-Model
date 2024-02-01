@@ -29,10 +29,10 @@ public class AgentManager
         SpawnNonRandom();
     }
 
-    public void UpdateAgents(float dt, List<Transform> obstacles)
+    public void UpdateAgents(float dt, List<Transform> obstacles, Transform predator)
     {
         Calculate(obstacles);
-        AgentUpdate(Time.fixedDeltaTime);
+        AgentUpdate(dt, predator);
     }
 
     private void Calculate(List<Transform> obstacles)
@@ -89,19 +89,11 @@ public class AgentManager
         }
     }
 
-    private void AgentUpdate(float dt)
+    private void AgentUpdate(float dt, Transform predator)
     {
-        agents.ForEach(agent => agent.AgentUpdate(dt));
+        agents.ForEach(agent => agent.AgentUpdate(dt, predator));
     }
-
-    public void AttachPredator(Predator predator)
-    {
-        // TODO: Make predator a reference in the agent script so you don't have to iterate
-        // and put it like that manually
-        // OR: pass predator as argument to update everytime
-        agents.ForEach(agent => agent.predator = predator.transform);
-    }
-
+    
     private void SpawnRandom()
     {
         for (int i = 0; i < settings.agentNumber; ++i)

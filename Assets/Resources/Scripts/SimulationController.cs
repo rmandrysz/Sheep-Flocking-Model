@@ -8,7 +8,7 @@ public class SimulationController : MonoBehaviour
     private AgentManager agentManager;
     private DataCollector dataCollector;
     private PlaygroundManager playgroundManager;
-    private Predator predator;
+    private Predator predator = null;
     
     [SerializeField] private PrefabList prefabs;
     [SerializeField] private PlaygroundSettings playgroundSettings;
@@ -29,12 +29,11 @@ public class SimulationController : MonoBehaviour
         playgroundManager.StartPlayground();
         agentManager.StartAgents();
         predator = StartPredator();
-        agentManager.AttachPredator(predator);
     }
 
     private void FixedUpdate() 
     {
-        agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls);
+        agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predator.transform);
         predator.UpdatePredator(Time.fixedDeltaTime);
 
         if (predator.transform.position == predator.targetPosition)
