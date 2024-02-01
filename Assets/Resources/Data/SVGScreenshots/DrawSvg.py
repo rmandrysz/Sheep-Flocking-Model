@@ -41,8 +41,8 @@ def draw(data, sizeX, sizeY, shouldDrawPredator) -> svg.SVG:
 
     background = svg.Rect(fill='white', 
                           stroke='transparent',
-                          width=600.0,
-                          height=400.0,
+                          width=sizeX,
+                          height=sizeY,
                           x = 150.0,
                           y = 150.0)
     result = [background]
@@ -107,12 +107,12 @@ def saveToFile(batchNumber, screenNumber, input):
         f.write(input)
 
 if __name__ == '__main__':
-    screenCount = 6
-    batchCount = 4
-    shouldDrawPredator = False
-    for batchCounter in range(batchCount):
-        for screenCounter in range(screenCount):
+    screenshotsInBatch = 6
+    batchesToDraw = 1
+    shouldDrawPredator = True
+    for batchCounter in range(batchesToDraw):
+        for screenCounter in range(screenshotsInBatch):
             sheep = readFile(batchCounter, screenCounter)
-            output = str(draw(sheep, 900.0, 700.0, shouldDrawPredator))
+            output = str(draw(sheep, 2000.0, 2000.0, shouldDrawPredator))
             saveToFile(batchCounter, screenCounter, output)
             # print(drawSheep(sheep, 1400.0, 800.0))

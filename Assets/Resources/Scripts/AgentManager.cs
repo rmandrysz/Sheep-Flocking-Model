@@ -7,9 +7,8 @@ public class AgentManager
     private static GameObject agentContainer;
 
     private readonly AgentSettings settings;
-    private GameObject prefab;
-
-    private List<Agent> agents = new();
+    private readonly GameObject prefab;
+    public List<Agent> Agents {get;} = new();
 
     public AgentManager(AgentSettings settings, GameObject agentContainer, GameObject prefab)
     {
@@ -42,7 +41,7 @@ public class AgentManager
 
         for (int i = 0; i < settings.agentNumber; ++i)
         {
-            var agent = agents[i];
+            var agent = Agents[i];
 
             agent.ResetAccumulators();
             agent.numFlockmates = 0;
@@ -55,7 +54,7 @@ public class AgentManager
 
             for (int j = 0; j < settings.agentNumber; j++)
             {
-                var neighbor = agents[j];
+                var neighbor = Agents[j];
                 if (i == j)
                 {
                     continue;
@@ -80,7 +79,7 @@ public class AgentManager
                         agent.AddFlockmateAvoidance(offset);
                         color = new Color(255f, 0f, 0f,  10f * Vector3.SqrMagnitude(offset / sqrDist));
                     }
-                    if (agents[i].debug)
+                    if (Agents[i].debug)
                     {
                         Debug.DrawRay(agent.transform.position, offset, color);
                     }
@@ -91,7 +90,7 @@ public class AgentManager
 
     private void AgentUpdate(float dt, Transform predator)
     {
-        agents.ForEach(agent => agent.AgentUpdate(dt, predator));
+        Agents.ForEach(agent => agent.AgentUpdate(dt, predator));
     }
     
     private void SpawnRandom()
@@ -106,7 +105,7 @@ public class AgentManager
             Agent agent = GameObject.Instantiate(
                     prefab, position, rotation, agentContainer.transform).GetComponent<Agent>();
 
-            agents.Add(agent);
+            Agents.Add(agent);
         }
     }
 
@@ -115,7 +114,7 @@ public class AgentManager
         var positions = CalculateSpawnPositions();
         foreach(var pos in positions)
         {
-            agents.Add(
+            Agents.Add(
                 GameObject.Instantiate(
                     prefab, pos, Quaternion.identity, agentContainer.transform).GetComponent<Agent>());
         }

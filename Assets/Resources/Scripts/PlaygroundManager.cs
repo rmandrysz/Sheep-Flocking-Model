@@ -9,13 +9,17 @@ public class PlaygroundManager
     private GameObject playground;
     public List<Transform> walls = new();
 
-    private PlaygroundSettings settings;
+    private readonly float horizontalWallOffset;
+    private readonly float verticalWallOffset;
+    private readonly float wallSegmentSize;
 
-    public PlaygroundManager(GameObject playground, GameObject wallSegmentPrefab, PlaygroundSettings settings)
+    public PlaygroundManager(GameObject playground, GameObject wallSegmentPrefab, SimulationSettings settings)
     {
         this.playground = playground;
         prefab = wallSegmentPrefab;
-        this.settings = settings;
+        horizontalWallOffset = settings.horizontalWallOffset;
+        verticalWallOffset = settings.verticalWallOffset;
+        wallSegmentSize = settings.wallSegmentSize;
     }
 
     public void StartPlayground()
@@ -26,11 +30,11 @@ public class PlaygroundManager
 
     private void SpawnWalls()
     {
-        for( float x = -settings.verticalWallOffset; x <= settings.verticalWallOffset; x += settings.wallSegmentSize )
+        for( float x = -verticalWallOffset; x <= verticalWallOffset; x += wallSegmentSize )
         {
             SpawnVerticalWallPair(x);
         }
-        for( float y = -settings.horizontalWallOffset; y <= settings.horizontalWallOffset; y += settings.wallSegmentSize )
+        for( float y = -horizontalWallOffset; y <= horizontalWallOffset; y += wallSegmentSize )
         {
             SpawnHorizontalWallPair(y);
         }
@@ -38,8 +42,8 @@ public class PlaygroundManager
 
     private void SpawnVerticalWallPair(float x)
     {
-        Vector3 positionHigh = new(settings.horizontalWallOffset, x, 0f);
-        Vector3 positionLow = new(-settings.horizontalWallOffset, x, 0f);
+        Vector3 positionHigh = new(horizontalWallOffset, x, 0f);
+        Vector3 positionLow = new(-horizontalWallOffset, x, 0f);
 
         SpawnWall(positionHigh);
         SpawnWall(positionLow);
@@ -47,8 +51,8 @@ public class PlaygroundManager
 
     private void SpawnHorizontalWallPair(float y)
     {
-        Vector3 positionLeft = new(y, -settings.verticalWallOffset, 0f);
-        Vector3 positionRight = new(y, settings.verticalWallOffset, 0f);
+        Vector3 positionLeft = new(y, -verticalWallOffset, 0f);
+        Vector3 positionRight = new(y, verticalWallOffset, 0f);
 
         SpawnWall(positionLeft);
         SpawnWall(positionRight);
