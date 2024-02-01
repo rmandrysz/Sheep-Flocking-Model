@@ -36,7 +36,7 @@ public class SimulationController : MonoBehaviour
         agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predator.transform);
         predator.UpdatePredator(Time.fixedDeltaTime);
 
-        if (predator.transform.position == predator.targetPosition)
+        if (!playgroundSettings.manualPredatorControl && predator.ReachedTargetPosition())
         {
             EndSimulation();
         }

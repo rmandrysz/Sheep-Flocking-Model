@@ -86,4 +86,9 @@ public class Predator : MonoBehaviour
 
         transform.rotation = targetRotation;
     }
+
+    public bool ReachedTargetPosition()
+    {
+        return (transform.position == targetPosition);
+    }
 }
