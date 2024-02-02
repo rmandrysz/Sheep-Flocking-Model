@@ -61,6 +61,10 @@ public class SimulationController : MonoBehaviour
 
     private void EndSimulation()
     {
+        if (simulationSettings.saveDataToFile)
+        {
+            dataCollector.StoreDataInFile();
+        }
         EditorApplication.isPlaying = false;
     }
 }
