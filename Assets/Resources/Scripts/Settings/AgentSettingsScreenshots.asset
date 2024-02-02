@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5509add2f0a1d94e94c959ae013c851, type: 3}
+  m_Name: AgentSettingsScreenshots
+  m_EditorClassIdentifier: 
+  initialMinSpeed: 0.3
+  finalMinSpeed: 0.3
+  initialMaxSpeed: 9
+  finalMaxSpeed: 12
+  obstacleAvoidSoftener: 15
+  flockmateAvoidanceWeight: 10
+  flockCenteringWeight: 0.6
+  velocityMatchingWeight: 0.1
+  obstacleAvoidanceWeight: 0.75
+  escapeWeight: 5
+  adjustedFlockmateAvoidanceWeight: 15
+  flockmateAvoidanceRadius: 6
+  flockmateAvoidanceSoftener: 0.6
+  flockmateDetectionRadius: 11
+  sightAngle: 150
+  flightZoneRadius: 60
+  maxRotationDegrees: 100
+  manualPredatorControl: 0

@@ -7,7 +7,6 @@ public class Agent : MonoBehaviour
     public Vector3 direction;
 
     [HideInInspector]
-    public Transform predator;
     public Vector3 flockmateCollisionAvoidance = Vector3.zero;
     public Vector3 averageFlockmateVelocity = Vector3.zero;
     public Vector3 averageFlockCenter = Vector3.zero;
@@ -31,15 +30,15 @@ public class Agent : MonoBehaviour
         previousDirection = Vector3.zero;
     }
 
-    public void AgentUpdate(float dt)
+    public void AgentUpdate(float dt, Transform predator)
     {
-        AdjustSpeedLimits();          
-        MoveToFlockCenter();
-        AvoidFlockmateCollisions();
-        MatchVelocity();
+        AdjustSpeedLimits(predator);          
+        MoveToFlockCenter(predator);
+        AvoidFlockmateCollisions(predator);
+        MatchVelocity(predator);
         if (predator)
         {
-            EscapeFromPredator();
+            EscapeFromPredator(predator);
         }
 
         UpdateDirection();
@@ -59,13 +58,13 @@ public class Agent : MonoBehaviour
         direction = Vector3.zero;
     }
 
-    private void AvoidFlockmateCollisions()
+    private void AvoidFlockmateCollisions(Transform predator = null)
     {
         float weight = settings.flockmateAvoidanceWeight;
         if (predator)
         {
             float diff = settings.adjustedFlockmateAvoidanceWeight - settings.flockmateAvoidanceWeight;
-            weight += PredatorSmoothStep() * diff;
+            weight += PredatorSmoothStep(predator) * diff;
         }
 
         RequestDirection(weight * flockmateCollisionAvoidance, "Avoid Flockmates");
@@ -78,7 +77,7 @@ public class Agent : MonoBehaviour
         flockmateCollisionAvoidance += newAvoidance;
     }
 
-    private void MatchVelocity()
+    private void MatchVelocity(Transform predator = null)
     {
         if (numFlockmates == 0)
         {
@@ -94,12 +93,12 @@ public class Agent : MonoBehaviour
         {
             return;
         }
-        float weight = PredatorSmoothStep() * settings.velocityMatchingWeight;
+        float weight = PredatorSmoothStep(predator) * settings.velocityMatchingWeight;
         averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
 
-    private void MoveToFlockCenter()
+    private void MoveToFlockCenter(Transform predator = null)
     {
         if (numFlockmates == 0)
         {
@@ -113,7 +112,7 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        float weight = PredatorSmoothStep() * settings.flockCenteringWeight;
+        float weight = PredatorSmoothStep(predator) * settings.flockCenteringWeight;
         RequestDirection(weight * (averageFlockCenter - transform.position), "Move to Center");
     }
 
@@ -124,10 +123,10 @@ public class Agent : MonoBehaviour
         RequestDirection(avoidance * settings.obstacleAvoidanceWeight, "Avoid Obstacle");
     }
 
-    private void EscapeFromPredator()
+    private void EscapeFromPredator(Transform predator)
     {
         var offset = transform.position - predator.position;
-        var escapeDirection = PredatorSmoothStep() * settings.escapeWeight * Vector3.Normalize(offset);
+        var escapeDirection = PredatorSmoothStep(predator) * settings.escapeWeight * Vector3.Normalize(offset);
 
         RequestDirection(escapeDirection, "Escape From Predator!");
     }
@@ -137,12 +136,12 @@ public class Agent : MonoBehaviour
         accumulator.Add((name, dir.magnitude, dir.normalized));
     }
 
-    private void AdjustSpeedLimits()
+    private void AdjustSpeedLimits(Transform predator)
     {
         var diffMax = settings.finalMaxSpeed - settings.initialMaxSpeed;
-        maxSpeed = settings.initialMaxSpeed + (diffMax * PredatorSmoothStep());
+        maxSpeed = settings.initialMaxSpeed + (diffMax * PredatorSmoothStep(predator));
         var diffMin = settings.finalMinSpeed - settings.initialMinSpeed;
-        minSpeed = settings.initialMinSpeed + (diffMin * PredatorSmoothStep());
+        minSpeed = settings.initialMinSpeed + (diffMin * PredatorSmoothStep(predator));
     }
 
     private void UpdateDirection()
@@ -184,13 +183,13 @@ public class Agent : MonoBehaviour
 
     public static float InvSquare(float x, float softener) 
     {
-        float eps = 0.000001f;
+        const float eps = 0.000001f;
         float result = Mathf.Pow((x + eps) / softener, -2);
 
         return result;
     }
     
-    private float PredatorSmoothStep(float min = 0f, float max = 3f)
+    private float PredatorSmoothStep(Transform predator, float min = 0f, float max = 3f)
     {
         if (!predator)
         {

@@ -9,7 +9,29 @@ public class Predator : MonoBehaviour
     public bool debug = false;
     public bool manualControl = false;
 
-    public void PredatorUpdate(float dt) 
+    public static Predator Spawn(GameObject prefab, bool manualControl)
+    {
+        var cam = Camera.main;
+        Vector3 spawnPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        spawnPosition.z = 0;
+        Vector3 targetPosition = spawnPosition;
+        
+        if (!manualControl)
+        {
+            spawnPosition = cam.ScreenToWorldPoint(new(0, 0));
+            spawnPosition.z = 0;
+            targetPosition = cam.ScreenToWorldPoint(new(cam.pixelWidth, cam.pixelHeight));
+            targetPosition.z = 0;
+        }
+
+        Predator predator = Instantiate(prefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
+        predator.manualControl = manualControl;
+        predator.targetPosition = targetPosition;
+
+        return predator;
+    }
+
+    public void UpdatePredator(float dt) 
     {
         Move(dt);
     }
@@ -63,5 +85,10 @@ public class Predator : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, relativePos.normalized);
 
         transform.rotation = targetRotation;
+    }
+
+    public bool ReachedTargetPosition()
+    {
+        return transform.position == targetPosition;
     }
 }
