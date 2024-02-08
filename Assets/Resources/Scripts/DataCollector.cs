@@ -25,7 +25,7 @@ public class DataCollector
         data.ForEach(point =>
         {
             string pointData = point.predatorCenterDistance
-                      + "\t" + point.agentCenterDistance
+                      + "; " + point.agentCenterDistance
                       + "\n";
             File.AppendAllText(filePath, pointData);
         });
