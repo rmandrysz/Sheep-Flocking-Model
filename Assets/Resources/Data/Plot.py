@@ -5,12 +5,12 @@ import statistics as stat
 import scipy as sp
 from matplotlib.ticker import MultipleLocator
 
-def getSimulationDataFilePath(dataFileNumber):
+def generateSimulationDataFilePath(dataFileNumber):
     here = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(here, "Files\Data" + str(dataFileNumber) + ".txt")
 
-def getReferenceDataFilePath():
+def genrateReferenceDataFilePath():
     here = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(here, "Reference\Trial3Data.txt")
@@ -69,7 +69,7 @@ def plot(simulationX, simulationY, referenceX, referenceY):
     plt.show()
 
 if __name__ == '__main__':
-    simulationX, simulationY = processDataFile(getSimulationDataFilePath(1), 45.0)
-    referenceX, referenceY = processDataFile(getReferenceDataFilePath(), 60.0)
+    simulationX, simulationY = processDataFile(generateSimulationDataFilePath(0), 45.0)
+    referenceX, referenceY = processDataFile(genrateReferenceDataFilePath(), 60.0)
 
     plot(simulationX, simulationY, referenceX, referenceY)

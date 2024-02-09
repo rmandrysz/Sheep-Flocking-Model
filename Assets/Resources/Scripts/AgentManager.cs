@@ -96,7 +96,7 @@ public class AgentManager
             agent.AgentUpdate(dt, predator);
             centerOfMass += agent.transform.position;
         });
-        
+
         return centerOfMass / Agents.Count;
     }
     

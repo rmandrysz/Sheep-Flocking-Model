@@ -5,7 +5,7 @@ using UnityEngine;
 public class Predator : MonoBehaviour
 {
     public Vector3 targetPosition = Vector3.zero;
-    public float speed = 4f;
+    private readonly float speed = 7f;
     public bool debug = false;
     public bool manualControl = false;
 
