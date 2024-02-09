@@ -8,35 +8,52 @@ public class DataCollector
 {
     private List<Data> data = new();
 
-    public void RecordFrameData(List<Agent> agents, Transform predator)
+    public void RecordFrameData(List<Agent> agents, Transform predator, Vector3 centerOfMass)
     {
         if (!predator)
         {
             return;
         }
-        
-        agents.ForEach(agent => RecordAgentData(agent, predator));
+
+        Data frameData = CalculateFrameData(agents, predator, centerOfMass);
+
+        data.Add(frameData);
     }
 
     public void StoreDataInFile()
     {
         string filePath = GenerateDataFilePath();
 
+        data.Sort((point1, point2) => point2.predatorCenterDistance.CompareTo(point1.predatorCenterDistance));
+        
         data.ForEach(point =>
         {
             string pointData = point.predatorCenterDistance
-                      + "; " + point.agentCenterDistance
+                      + "; " + point.meanAgentCenterDistance
                       + "\n";
             File.AppendAllText(filePath, pointData);
         });
     }
 
-    private void RecordAgentData(Agent agent, Transform predator)
+    private float CalculateDistanceFromCenter(Transform transform, Vector3 centerOfMass)
     {
-        Data dataPoint;
-        dataPoint.predatorCenterDistance = (predator.transform.position - (agent.averageFlockCenter / agent.numFlockmates)).magnitude;
-        dataPoint.agentCenterDistance = ((agent.averageFlockCenter / agent.numFlockmates) - agent.transform.position).magnitude;
-        data.Add(dataPoint);
+        Vector3 offset = transform.position - centerOfMass;
+        return offset.magnitude;
+    }
+
+    private Data CalculateFrameData(List<Agent> agents, Transform predator, Vector3 centerOfMass)
+    {
+        Data frameData = new();
+        float sumOfDistances = 0f;
+
+        agents.ForEach(agent => sumOfDistances += CalculateDistanceFromCenter(agent.transform, centerOfMass));
+        float meanAgentDistance = sumOfDistances / agents.Count;
+        float predatorCenterDistance = CalculateDistanceFromCenter(predator, centerOfMass);
+
+        frameData.predatorCenterDistance = predatorCenterDistance;
+        frameData.meanAgentCenterDistance = meanAgentDistance;
+
+        return frameData;
     }
 
     private string GenerateDataFilePath()
@@ -56,6 +73,6 @@ public class DataCollector
     private struct Data
     {
         public float predatorCenterDistance;
-        public float agentCenterDistance;
+        public float meanAgentCenterDistance;
     }
 }

@@ -28,10 +28,10 @@ public class AgentManager
         SpawnNonRandom();
     }
 
-    public void UpdateAgents(float dt, List<Transform> obstacles, Transform predator)
+    public Vector3 UpdateAgents(float dt, List<Transform> obstacles, Transform predator)
     {
         Calculate(obstacles);
-        AgentUpdate(dt, predator);
+        return AgentUpdate(dt, predator);
     }
 
     private void Calculate(List<Transform> obstacles)
@@ -88,9 +88,16 @@ public class AgentManager
         }
     }
 
-    private void AgentUpdate(float dt, Transform predator)
+    private Vector3 AgentUpdate(float dt, Transform predator)
     {
-        Agents.ForEach(agent => agent.AgentUpdate(dt, predator));
+        Vector3 centerOfMass = Vector3.zero;
+
+        Agents.ForEach(agent => {
+            agent.AgentUpdate(dt, predator);
+            centerOfMass += agent.transform.position;
+        });
+        
+        return centerOfMass / Agents.Count;
     }
     
     private void SpawnRandom()

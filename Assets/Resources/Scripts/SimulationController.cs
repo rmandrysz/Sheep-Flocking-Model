@@ -32,7 +32,7 @@ public class SimulationController : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predator.transform);
+        Vector3 centerOfMass = agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predator.transform);
         predator.UpdatePredator(Time.fixedDeltaTime);
 
         if (!simulationSettings.manualPredatorControl && predator.ReachedTargetPosition())
@@ -42,7 +42,7 @@ public class SimulationController : MonoBehaviour
 
         if (simulationSettings.saveDataToFile)
         {
-            dataCollector.RecordFrameData(agentManager.Agents, predator.transform);
+            dataCollector.RecordFrameData(agentManager.Agents, predator.transform, centerOfMass);
         }
     }
 

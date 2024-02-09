@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7f84ce0f234a846b6627bd1a99427b, type: 3}
   m_Name: DefaultSimulationSettings
   m_EditorClassIdentifier: 
+  saveDataToFile: 1
   manualPredatorControl: 0
   horizontalWallOffset: 72.5
   verticalWallOffset: 42.5
