@@ -40,20 +40,11 @@ def extractDataFromLines(lines):
 def normalizeData(data, pointOfReference):
     return [float(x)/pointOfReference for x in data]
 
-def processReferenceData():
-    lines = readLinesFromDataFile(getReferenceDataFilePath())
-
-    data = extractDataFromLines(lines)
-    xData = normalizeData(data = data.keys(), pointOfReference = 60.0)
-    yData = normalizeData(data = data.values(), pointOfReference = min(data.values()))
-
-    return xData, yData
-
-def processSimulationData(dataFileNumber = 0):
-    lines = readLinesFromDataFile(getSimulationDataFilePath(dataFileNumber))
+def processDataFile(path, xDataPointOfReference):
+    lines = readLinesFromDataFile(path)
     data = extractDataFromLines(lines)
 
-    xData = normalizeData(data = data.keys(), pointOfReference = 45.0)
+    xData = normalizeData(data = data.keys(), pointOfReference = xDataPointOfReference)
     yData = normalizeData(data = data.values(), pointOfReference = min(data.values()))
 
     return xData, yData
@@ -78,7 +69,7 @@ def plot(simulationX, simulationY, referenceX, referenceY):
     plt.show()
 
 if __name__ == '__main__':
-    simulationX, simulationY = processSimulationData(1)
-    referenceX, referenceY = processReferenceData()
+    simulationX, simulationY = processDataFile(getSimulationDataFilePath(1), 45.0)
+    referenceX, referenceY = processDataFile(getReferenceDataFilePath(), 60.0)
 
     plot(simulationX, simulationY, referenceX, referenceY)
