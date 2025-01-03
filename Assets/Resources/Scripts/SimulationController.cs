@@ -26,7 +26,7 @@ public class SimulationController : MonoBehaviour
     private void Start() 
     {
         playgroundManager.StartPlayground();
-        agentManager.StartAgents();
+        agentManager.StartAgents(simulationSettings);
         predator = StartPredator();
     }
 

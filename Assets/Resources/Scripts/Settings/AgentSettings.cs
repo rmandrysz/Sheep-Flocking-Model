@@ -38,5 +38,5 @@ public class AgentSettings : ScriptableObject
     [Header ("Spawn Rules")]
     public bool enableRandomSpawn = false;
     public int agentNumber = 46;
-    public float spawnRadius = 20f;
+    public float spawnRadiusForRandomSpawn = 20f;
 }
