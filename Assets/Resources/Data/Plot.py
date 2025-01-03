@@ -52,8 +52,8 @@ def processDataFile(path, xDataPointOfReference):
 def plotReferenceData(xData, yData):
     plt.plot(xData, yData, '^', label="ExperimentalData", markerfacecolor='none', ms='6', color='seagreen')
 
-def plotSimulationData(xData, yData):
-    plt.plot(xData, yData, '.-', color='black', label="Simulation data", markerfacecolor='none')
+def plotSimulationData(xData, yData, plotColor = 'black', marker = '.', plotLabel='Simulation data'):
+    plt.plot(xData, yData, marker, color=plotColor, label=plotLabel, markerfacecolor='none')
 
 def plot(simulationX, simulationY, referenceX, referenceY):
     plotSimulationData(simulationX, simulationY)
@@ -68,8 +68,21 @@ def plot(simulationX, simulationY, referenceX, referenceY):
     # plt.savefig("FigMeanDistanceSim.png", bbox_inches='tight', pad_inches=0)
     plt.show()
 
+def plotNotNormalized(dataFilePath):
+    lines = readLinesFromDataFile(dataFilePath)
+    data = extractDataFromLines(lines)
+
+    plotSimulationData(data.keys(), data.values())
+    plt.show()
+
 if __name__ == '__main__':
-    simulationX, simulationY = processDataFile(generateSimulationDataFilePath(0), 45.0)
+    newFileNumber = 29
+    oldFileNumber = newFileNumber - 1
+    simulationXold, simulationYold = processDataFile(generateSimulationDataFilePath(oldFileNumber), 40.0)
     referenceX, referenceY = processDataFile(genrateReferenceDataFilePath(), 60.0)
 
-    plot(simulationX, simulationY, referenceX, referenceY)
+    simulationXnew, simulationYnew = processDataFile(generateSimulationDataFilePath(newFileNumber), 40.0)
+    plotSimulationData(simulationXold, simulationYold, plotColor='red', marker='x', plotLabel='Simulation data old')
+
+    plot(simulationXnew, simulationYnew, referenceX, referenceY)
+    # plotNotNormalized(generateSimulationDataFilePath(newFileNumber))
