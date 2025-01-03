@@ -9,14 +9,14 @@ public class Predator : MonoBehaviour
     public bool debug = false;
     public bool manualControl = false;
 
-    public static Predator Spawn(GameObject prefab, bool manualControl)
+    public static Predator Spawn(GameObject prefab, SimulationSettings simulationSettings)
     {
         var cam = Camera.main;
         Vector3 spawnPosition = cam.ScreenToWorldPoint(Input.mousePosition);
         spawnPosition.z = 0;
         Vector3 targetPosition = spawnPosition;
         
-        if (!manualControl)
+        if (!simulationSettings.manualPredatorControl)
         {
             spawnPosition = cam.ScreenToWorldPoint(new(0, 0));
             spawnPosition.z = 0;
@@ -25,7 +25,7 @@ public class Predator : MonoBehaviour
         }
 
         Predator predator = Instantiate(prefab, spawnPosition, Quaternion.identity).GetComponent<Predator>();
-        predator.manualControl = manualControl;
+        predator.manualControl = simulationSettings.manualPredatorControl;
         predator.targetPosition = targetPosition;
 
         return predator;

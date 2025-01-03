@@ -27,22 +27,29 @@ public class SimulationController : MonoBehaviour
     {
         playgroundManager.StartPlayground();
         agentManager.StartAgents(simulationSettings);
-        predator = StartPredator();
+        if (!simulationSettings.manualPredatorSpawn)
+        {
+            StartPredator();
+        }
     }
 
     private void FixedUpdate() 
     {
-        Vector3 centerOfMass = agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predator.transform);
-        predator.UpdatePredator(Time.fixedDeltaTime);
+        Transform predatorTransform = predator ? predator.transform : null;
+        Vector3 centerOfMass = agentManager.UpdateAgents(Time.fixedDeltaTime, playgroundManager.walls, predatorTransform);
 
-        if (!simulationSettings.manualPredatorControl && predator.ReachedTargetPosition())
+        if (predator)
         {
-            EndSimulation();
+            predator.UpdatePredator(Time.fixedDeltaTime);
+            if (!simulationSettings.manualPredatorControl && predator.ReachedTargetPosition())
+            {
+                EndSimulation();
+            }
         }
 
         if (simulationSettings.saveDataToFile)
         {
-            dataCollector.RecordFrameData(agentManager.Agents, predator.transform, centerOfMass);
+            dataCollector.RecordFrameData(agentManager.Agents, predatorTransform, centerOfMass);
         }
     }
 
@@ -52,11 +59,19 @@ public class SimulationController : MonoBehaviour
         {
             StartCoroutine(SvgScreenshotRecorder.CaptureScreenchotBatch(1f, agentManager.Agents, predator.transform));
         }
+
+        if(simulationSettings.manualPredatorSpawn && Input.GetKeyDown(KeyCode.S))
+        {
+            StartPredator();
+        }
     }
 
-    private Predator StartPredator()
+    private void StartPredator()
     {
-        return Predator.Spawn(prefabs.predatorPrefab, simulationSettings.manualPredatorControl);
+        if(!predator)
+        {
+            predator = Predator.Spawn(prefabs.predatorPrefab, simulationSettings);
+        }
     }
 
     private void EndSimulation()

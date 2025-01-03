@@ -7,6 +7,7 @@ public class SimulationSettings : ScriptableObject
 {
     public bool saveDataToFile = false;
 
+    public bool manualPredatorSpawn = false;
     public bool manualPredatorControl = false;
 
     public float horizontalWallOffset;
