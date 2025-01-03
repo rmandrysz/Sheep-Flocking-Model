@@ -94,20 +94,12 @@ public class Agent : MonoBehaviour
             return;
         }
         float weight = PredatorSmoothStep(predator) * settings.velocityMatchingWeight;
-        averageFlockmateVelocity /= numFlockmates;
         RequestDirection(weight * averageFlockmateVelocity, "Match Velocity");
     }
 
     private void MoveToFlockCenter(Transform predator = null)
     {
-        if (numFlockmates == 0)
-        {
-            return;
-        }
-
-        averageFlockCenter /= numFlockmates;
-
-        if (!predator)
+        if (numFlockmates == 0 || !predator)
         {
             return;
         }
@@ -138,6 +130,12 @@ public class Agent : MonoBehaviour
 
     private void AdjustSpeedLimits(Transform predator)
     {
+        if(!predator)
+        {
+            maxSpeed = settings.initialMaxSpeed;
+            minSpeed = settings.initialMinSpeed;
+            return;
+        }
         var diffMax = settings.finalMaxSpeed - settings.initialMaxSpeed;
         maxSpeed = settings.initialMaxSpeed + (diffMax * PredatorSmoothStep(predator));
         var diffMin = settings.finalMinSpeed - settings.initialMinSpeed;

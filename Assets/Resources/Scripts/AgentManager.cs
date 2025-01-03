@@ -44,7 +44,8 @@ public class AgentManager
             var agent = Agents[i];
 
             agent.ResetAccumulators();
-            agent.numFlockmates = 0;
+            int numFlockmates = 0;
+            Vector3 flockCenterSum = Vector3.zero, flockmateVelocitySum = Vector3.zero;
 
             foreach(var obstacle in obstacles)
             {
@@ -70,9 +71,9 @@ public class AgentManager
                         Debug.DrawRay(agent.transform.position, agent.previousDirection.normalized * 3, Color.blue);
                     }
                     Color color = new(0f, 255f, 0f);
-                    ++agent.numFlockmates;
-                    agent.averageFlockmateVelocity += neighbor.direction;
-                    agent.averageFlockCenter += neighbor.transform.position;
+                    ++numFlockmates;
+                    flockmateVelocitySum += neighbor.direction;
+                    flockCenterSum += neighbor.transform.position;
 
                     if (sqrDist <= avoidanceRadius * avoidanceRadius)
                     {
@@ -84,6 +85,13 @@ public class AgentManager
                         Debug.DrawRay(agent.transform.position, offset, color);
                     }
                 }
+            }
+
+            agent.numFlockmates = numFlockmates;
+            if(numFlockmates != 0)
+            {
+                agent.averageFlockmateVelocity = flockCenterSum / numFlockmates;
+                agent.averageFlockCenter = flockmateVelocitySum / numFlockmates;
             }
         }
     }
