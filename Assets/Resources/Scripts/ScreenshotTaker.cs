@@ -16,7 +16,7 @@ public class ScreenshotTaker : MonoBehaviour {
     }
 
     void LateUpdate() {
-        if(!record)
+        if (!record)
         {
             return;
         }
@@ -25,7 +25,7 @@ public class ScreenshotTaker : MonoBehaviour {
         {
             screenshotCount = 6;
         }
-        if(screenshotCount > 0 && skipFrame != 0)
+        if (screenshotCount > 0 && skipFrame != 0)
         {
             RenderTexture rt = new(resWidth, resHeight, 32);
             camera.targetTexture = rt;

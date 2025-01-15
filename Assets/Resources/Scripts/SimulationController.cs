@@ -55,20 +55,39 @@ public class SimulationController : MonoBehaviour
 
     private void Update() 
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             StartCoroutine(SvgScreenshotRecorder.CaptureScreenchotBatch(1f, agentManager.Agents, predator.transform));
         }
 
-        if(simulationSettings.manualPredatorSpawn && Input.GetKeyDown(KeyCode.S))
+        if (simulationSettings.manualPredatorSpawn && Input.GetKeyDown(KeyCode.S))
         {
             StartPredator();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Time.timeScale += 1;
+            Debug.Log("Speeding up to " + Time.timeScale);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (Time.timeScale > 1)
+            {
+                Time.timeScale -= 1;
+                Debug.Log("Slowing down to " + Time.timeScale);
+            }
+            else
+            {
+                Debug.Log("Can't slow down below 1");
+            }
         }
     }
 
     private void StartPredator()
     {
-        if(!predator)
+        if (!predator)
         {
             predator = Predator.Spawn(prefabs.predatorPrefab, simulationSettings);
         }

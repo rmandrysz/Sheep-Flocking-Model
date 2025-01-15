@@ -20,7 +20,7 @@ public class AgentManager
 
     public void StartAgents(SimulationSettings simulationSettings)
     {
-        if( settings.enableRandomSpawn )
+        if (settings.enableRandomSpawn)
         {
             SpawnRandom();
             return;
@@ -88,7 +88,7 @@ public class AgentManager
             }
 
             agent.numFlockmates = numFlockmates;
-            if(numFlockmates != 0)
+            if (numFlockmates != 0)
             {
                 agent.averageFlockmateVelocity = flockCenterSum / numFlockmates;
                 agent.averageFlockCenter = flockmateVelocitySum / numFlockmates;

@@ -28,7 +28,7 @@ public static class SvgScreenshotRecorder
     {  
         agents.ForEach(agent => StorePositionInFile(filePath, agent.transform));
 
-        if(predator)
+        if (predator)
         {
             StorePositionInFile(filePath, predator);
         }

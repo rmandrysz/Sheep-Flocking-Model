@@ -84,7 +84,7 @@ public class Agent : MonoBehaviour
             return;
         }
         
-        if(debug)
+        if (debug)
         {
             Debug.DrawRay(transform.position, averageFlockmateVelocity, Color.blue);
         }
@@ -130,7 +130,7 @@ public class Agent : MonoBehaviour
 
     private void AdjustSpeedLimits(Transform predator)
     {
-        if(!predator)
+        if (!predator)
         {
             maxSpeed = settings.initialMaxSpeed;
             minSpeed = settings.initialMinSpeed;
@@ -152,7 +152,7 @@ public class Agent : MonoBehaviour
         direction = Vector3.ClampMagnitude(direction, maxSpeed);
         // if (direction.sqrMagnitude < (minSpeed * minSpeed))
         // {
-        //     // if(!predator)
+        //     // if (!predator)
         //     // {
         //         direction = Vector3.zero;
         //     // }

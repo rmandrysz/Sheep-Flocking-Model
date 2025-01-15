@@ -47,7 +47,7 @@ public class Predator : MonoBehaviour
         {
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 0;
-            if(debug)
+            if (debug)
             {
                 print(targetPosition);
             }
