@@ -76,7 +76,7 @@ def plotNotNormalized(dataFilePath):
     plt.show()
 
 if __name__ == '__main__':
-    newFileNumber = 30
+    newFileNumber = 32
     oldFileNumber = newFileNumber - 1
     simulationXold, simulationYold = processDataFile(generateSimulationDataFilePath(oldFileNumber), 40.0)
     referenceX, referenceY = processDataFile(genrateReferenceDataFilePath(), 60.0)

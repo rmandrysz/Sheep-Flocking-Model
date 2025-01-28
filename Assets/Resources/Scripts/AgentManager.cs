@@ -169,10 +169,7 @@ public class AgentManager
 
     private List<Vector2> GeneratePositionsEvenRow(int agentsInRow, float xOffset, float y)
     {
-        List<Vector2> result = new()
-        {
-            new(0, y)
-        };
+        List<Vector2> result = new() { new(0, y), new(0, -y) };
 
         for (int i = 0; i < agentsInRow - 1; i+=2)
         {
