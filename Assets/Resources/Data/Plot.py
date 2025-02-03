@@ -50,15 +50,12 @@ def processDataFile(path, xDataPointOfReference):
     return xData, yData
 
 def plotReferenceData(xData, yData):
-    plt.plot(xData, yData, '^', label="ExperimentalData", markerfacecolor='none', ms='6', color='seagreen')
+    plt.plot(xData, yData, '^', label="Experimental data", markerfacecolor='none', ms='6', color='seagreen')
 
 def plotSimulationData(xData, yData, plotColor = 'black', marker = '.', plotLabel='Simulation data'):
     plt.plot(xData, yData, marker, color=plotColor, label=plotLabel, markerfacecolor='none')
 
-def plot(simulationX, simulationY, referenceX, referenceY):
-    plotSimulationData(simulationX, simulationY)
-    plotReferenceData(referenceX, referenceY)
-
+def preparePlot(simulationX):
     plt.xlim(max(simulationX) + 0.1, min(simulationX) - 0.1)
     # plt.xticks(np.arange(round(min(simulationX) - 0.1, 1), round(max(simulationX) + 0.1, 1), step=0.1))
     plt.xlabel("Predator distance from the flock center")
@@ -76,13 +73,16 @@ def plotNotNormalized(dataFilePath):
     plt.show()
 
 if __name__ == '__main__':
-    newFileNumber = 32
-    oldFileNumber = newFileNumber - 1
+    newFileNumber = 1
+    # oldFileNumber = newFileNumber - 1
+    oldFileNumber = 0
     simulationXold, simulationYold = processDataFile(generateSimulationDataFilePath(oldFileNumber), 40.0)
     referenceX, referenceY = processDataFile(genrateReferenceDataFilePath(), 60.0)
 
     simulationXnew, simulationYnew = processDataFile(generateSimulationDataFilePath(newFileNumber), 40.0)
-    plotSimulationData(simulationXold, simulationYold, plotColor='red', marker='x', plotLabel='Simulation data old')
+    plotSimulationData(simulationXold, simulationYold, plotColor='red', marker='x', plotLabel='Control sample')
+    plotSimulationData(simulationXnew, simulationYnew, plotLabel = 'Test sample')
+    plotReferenceData(referenceX, referenceY)
 
-    plot(simulationXnew, simulationYnew, referenceX, referenceY)
+    preparePlot(simulationXnew)
     # plotNotNormalized(generateSimulationDataFilePath(newFileNumber))

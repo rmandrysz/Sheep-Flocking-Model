@@ -21,7 +21,7 @@ MonoBehaviour:
   flockCenteringWeight: 0.6
   velocityMatchingWeight: 0.1
   obstacleAvoidanceWeight: 0.75
-  escapeWeight: 5
+  escapeWeight: 0
   adjustedFlockmateAvoidanceWeight: 15
   flockmateAvoidanceRadius: 6
   flockmateAvoidanceSoftener: 0.6
@@ -29,4 +29,6 @@ MonoBehaviour:
   sightAngle: 150
   flightZoneRadius: 60
   maxRotationDegrees: 100
-  manualPredatorControl: 0
+  enableRandomSpawn: 0
+  agentNumber: 46
+  spawnRadius: 20

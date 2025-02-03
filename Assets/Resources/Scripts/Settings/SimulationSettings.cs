@@ -9,6 +9,8 @@ public class SimulationSettings : ScriptableObject
 
     public bool manualPredatorSpawn = false;
     public bool manualPredatorControl = false;
+    public bool forceSimulationFlow = false;
+    public int dataCollectionDelay = 60;
 
     public float horizontalWallOffset;
     public float verticalWallOffset;
