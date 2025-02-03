@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: DefaultSimulationSettings
   m_EditorClassIdentifier: 
   saveDataToFile: 1
+  manualPredatorSpawn: 0
   manualPredatorControl: 0
+  forceSimulationFlow: 1
+  dataCollectionDelay: 60
   horizontalWallOffset: 72.5
   verticalWallOffset: 42.5
   wallSegmentSize: 5

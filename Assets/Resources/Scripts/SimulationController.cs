@@ -27,10 +27,38 @@ public class SimulationController : MonoBehaviour
     {
         playgroundManager.StartPlayground();
         agentManager.StartAgents(simulationSettings);
+
+        if(simulationSettings.forceSimulationFlow)
+        {
+            simulationSettings.manualPredatorSpawn = false;
+            simulationSettings.manualPredatorControl = false;
+            InitiateForcedSimulationFlow();
+            return;
+        }
+
         if (!simulationSettings.manualPredatorSpawn)
         {
             StartPredator();
         }
+    }
+
+    private void InitiateForcedSimulationFlow()
+    {
+        Time.timeScale = 6;
+        StartCoroutine(SetTimeScaleAfterADelay(1, simulationSettings.dataCollectionDelay));
+        StartCoroutine(SpawnPredatorAfterADelay(simulationSettings.dataCollectionDelay));
+    }
+
+    private IEnumerator SpawnPredatorAfterADelay(int delaySeconds)
+    {
+        yield return new WaitForSecondsRealtime(delaySeconds);
+        StartPredator();
+    }
+
+    private IEnumerator SetTimeScaleAfterADelay(int scaleValue, int delaySeconds)
+    {
+        yield return new WaitForSecondsRealtime(delaySeconds);
+        Time.timeScale = scaleValue;
     }
 
     private void FixedUpdate() 
@@ -54,6 +82,16 @@ public class SimulationController : MonoBehaviour
     }
 
     private void Update() 
+    {
+        if (simulationSettings.forceSimulationFlow)
+        {
+            return;
+        }
+
+        HandleInput();
+    }
+
+    private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
