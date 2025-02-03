@@ -3,9 +3,9 @@
 1. Weights:
    | Parameter name | Default value | Tested value | Impact | Data file number for the test | Plot |
    | -------------- | ------------- | ------------ | ------ | ----------------------------- | ---- |
-   | Flockmate avoidance weight | 0.2 | | | | |
-   | Flock centering weight | 0.8 | | | | |
-   | Velocity matching weight | 0.4 | | | | |
+   | Flockmate avoidance weight | 0.2 | 0.6 | increasing flockmate avoidance weight makes the plot higher | 2 | ![image](Plots/FlockmateAvoidance.png) |
+   | Flock centering weight | 0.8 | 0.4 | decreasing flock centering makes the plot lower and stretched it horizontally | 3 | ![image](Plots/FlockCentering.png) |
+   | Velocity matching weight | 0.4 | 0.8 | increasing velocity matching makes the plot change in y value steeper | 4 | ![image](Plots/VelocityMatching.png) |
    | Obstacle avoidance weight | 0.2 | | | | |
    | Escape weight | 6 | 8 | increasing escape weight decreases the difference between minimum and maximum mean distance from the flock center - the graph gets 'lower' | 1 | ![image](Plots/EscapeWeight.png) |
    | Adjusted flockmate avoidance weight | 1.45 | | | | |

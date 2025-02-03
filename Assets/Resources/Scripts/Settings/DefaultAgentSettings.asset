@@ -18,7 +18,7 @@ MonoBehaviour:
   finalMaxSpeed: 16
   obstacleAvoidSoftener: 15
   flockmateAvoidanceWeight: 0.2
-  flockCenteringWeight: 0.8
+  flockCenteringWeight: 0.4
   velocityMatchingWeight: 0.4
   obstacleAvoidanceWeight: 0.2
   escapeWeight: 6
