@@ -148,8 +148,13 @@ public class Agent : MonoBehaviour
         {
             direction += request.direction * request.magnitude;
         }
+        var clampedDirection =  Vector3.ClampMagnitude(direction, maxSpeed);
+        if (direction != clampedDirection)
+        {
+            Debug.Log("Velocity clamped. Diff: " + (direction - clampedDirection));
+        }
 
-        direction = Vector3.ClampMagnitude(direction, maxSpeed);
+        direction = clampedDirection;
         // if (direction.sqrMagnitude < (minSpeed * minSpeed))
         // {
         //     // if (!predator)
